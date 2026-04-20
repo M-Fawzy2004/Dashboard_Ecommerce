@@ -32,10 +32,10 @@ class AddProductTopBar extends StatelessWidget {
             width: 42.w,
             height: 42.w,
             decoration: BoxDecoration(
-              color: AppColors.electricBlue.withValues(alpha: 0.12),
+              color: AppColors.accent.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: Icon(Icons.add_box_rounded, color: AppColors.electricBlue, size: 22.sp),
+            child: Icon(Icons.add_box_rounded, color: AppColors.accent, size: 22.sp),
           ),
           SizedBox(width: 10.w),
           Text(
@@ -50,7 +50,7 @@ class AddProductTopBar extends StatelessWidget {
                 hintText: 'search_product_for_add'.tr(),
                 prefixIcon: const Icon(Icons.search_rounded),
                 filled: true,
-                fillColor: AppColors.slate,
+                fillColor: AppColors.card,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.08)),
@@ -89,7 +89,7 @@ class AddProductTopBar extends StatelessWidget {
             width: 40.w,
             height: 40.w,
             decoration: BoxDecoration(
-              color: AppColors.slate,
+              color: AppColors.card,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: Colors.black.withValues(alpha: 0.12)),
             ),

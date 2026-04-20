@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
+import '../../../../../shared/theme/app_spacing.dart';
 
 class SideNav extends StatelessWidget {
   const SideNav({
@@ -16,46 +17,136 @@ class SideNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = <_NavItem>[
-      _NavItem(Icons.home_rounded, 'home'),
-      _NavItem(Icons.category_rounded, 'categories'),
-      _NavItem(Icons.receipt_long_rounded, 'orders'),
-      _NavItem(Icons.group_rounded, 'customers'),
-      _NavItem(Icons.settings_rounded, 'settings'),
-      _NavItem(Icons.inventory_2_rounded, 'products'),
-      _NavItem(Icons.add_box_rounded, 'add_products'),
-    ];
-
     return Container(
-      width: 240.w,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+      width: 260.w,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
       decoration: BoxDecoration(
-        color: AppColors.slate.withValues(alpha: 0.75),
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        color: AppColors.card,
+        border: Border(right: BorderSide(color: AppColors.divider)),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'app_title'.tr(),
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.metallicGold,
+          // Branding
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: Row(
+              children: [
+                Container(
+                  width: 32.w,
+                  height: 32.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: const Icon(Icons.dashboard, color: Colors.white, size: 20),
                 ),
+                SizedBox(width: 12.w),
+                const Text(
+                  'Dashboard',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 24.h),
-          ...items.map(
-            (item) => Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: _SideNavTile(
-                item: item,
-                active: item.labelKey == activeKey,
-                onTap: () => onItemTap?.call(item.labelKey),
+          AppSpacing.v25,
+          
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSection([
+                    _NavItem(Icons.grid_view_rounded, 'Dashboard', 'home'),
+                    _NavItem(Icons.shopping_cart_outlined, 'order_management'.tr(), 'orders'),
+                    _NavItem(Icons.people_outline, 'customers'.tr(), 'customers'),
+                    _NavItem(Icons.confirmation_number_outlined, 'coupon_code'.tr(), 'coupons'),
+                    _NavItem(Icons.category_outlined, 'categories'.tr(), 'categories'),
+                    _NavItem(Icons.swap_horiz_outlined, 'transaction'.tr(), 'transactions'),
+                    _NavItem(Icons.workspace_premium_outlined, 'brand'.tr(), 'brands'),
+                  ]),
+                  
+                  _buildHeader('product_list_title'.tr()),
+                  _buildSection([
+                    _NavItem(Icons.add_box_outlined, 'add_products'.tr(), 'add_products'),
+                    _NavItem(Icons.perm_media_outlined, 'product_media'.tr(), 'product_media'),
+                    _NavItem(Icons.list_alt_outlined, 'product_list'.tr(), 'product_list'),
+                    _NavItem(Icons.rate_review_outlined, 'product_reviews'.tr(), 'product_reviews'),
+                  ]),
+                  
+                  _buildHeader('admin_role'.tr()),
+                  _buildSection([
+                    _NavItem(Icons.admin_panel_settings_outlined, 'admin_role'.tr(), 'admin_role'),
+                    _NavItem(Icons.security_outlined, 'control_authority'.tr(), 'control_authority'),
+                  ]),
+                ],
+              ),
+            ),
+          ),
+          
+          const Divider(),
+          AppSpacing.v10,
+          // User Profile
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+            leading: CircleAvatar(
+              radius: 18.r,
+              backgroundColor: AppColors.background,
+              child: const Icon(Icons.person_outline, color: AppColors.textSecondary),
+            ),
+            title: Text(
+              'Dealport',
+              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
+            ),
+            subtitle: Text(
+              'Mark@thedesigner...',
+              style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary),
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: const Icon(Icons.logout, size: 18),
+          ),
+          AppSpacing.v10,
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.open_in_new, size: 16),
+              label: Text('your_shop'.tr()),
+              style: OutlinedButton.styleFrom(
+                alignment: Alignment.centerLeft,
+                foregroundColor: AppColors.textPrimary,
+                side: const BorderSide(color: Color(0xFFD1D5DB)),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeader(String title) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 8.h),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textSecondary,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSection(List<_NavItem> items) {
+    return Column(
+      children: items.map((item) => _SideNavTile(
+        item: item,
+        active: item.key == activeKey,
+        onTap: () => onItemTap?.call(item.key),
+      )).toList(),
     );
   }
 }
@@ -73,32 +164,35 @@ class _SideNavTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(14.r),
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          color: active ? AppColors.electricBlue.withValues(alpha: 0.15) : Colors.transparent,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              item.icon,
-              color: active ? AppColors.electricBlue : AppColors.textSecondary,
-              size: 20.sp,
-            ),
-            SizedBox(width: 10.w),
-            Text(
-              item.labelKey.tr(),
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: active ? AppColors.textPrimary : AppColors.textSecondary,
-                fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8.r),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            color: active ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                item.icon,
+                size: 20.sp,
+                color: active ? Colors.white : AppColors.textSecondary,
               ),
-            ),
-          ],
+              SizedBox(width: 12.w),
+              Text(
+                item.label,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                  color: active ? Colors.white : AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -106,8 +200,10 @@ class _SideNavTile extends StatelessWidget {
 }
 
 class _NavItem {
-  const _NavItem(this.icon, this.labelKey);
+  const _NavItem(this.icon, this.label, this.key);
 
   final IconData icon;
-  final String labelKey;
+  final String label;
+  final String key;
 }
+

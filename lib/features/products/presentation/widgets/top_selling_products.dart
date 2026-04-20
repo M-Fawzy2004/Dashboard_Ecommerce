@@ -19,7 +19,7 @@ class TopSellingProducts extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(18.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -51,8 +51,8 @@ class TopSellingProducts extends StatelessWidget {
                       child: LinearProgressIndicator(
                         minHeight: 8.h,
                         value: item.score / 100,
-                        backgroundColor: AppColors.surface,
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.electricBlue),
+                        backgroundColor: AppColors.background,
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
                       ),
                     ),
                   ),

@@ -1,4 +1,4 @@
-﻿{
+{
   "app_title": "E-Commerce Dashboard",
   "dashboard_title": "Dashboard Overview",
   "dashboard_subtitle": "Welcome back! Here is your performance summary.",
@@ -109,5 +109,30 @@
   "delivery": "Delivery",
   "completed": "Completed",
   "pending": "Pending",
-  "refunded": "Refunded"
+  "refunded": "Refunded",
+  "report_this_week": "Report for this week",
+  "users_last_30_minutes": "Users in last 30 minutes",
+  "users_per_minute": "Users per minute",
+  "sales_by_country": "Sales by Country",
+  "view_insight": "View Insight",
+  "transaction": "Transaction",
+  "filter": "Filter",
+  "details": "Details",
+  "top_products": "Top Products",
+  "all_product_small": "All product",
+  "see_more": "See more",
+  "add_new": "Add New",
+  "best_selling_product": "Best selling product",
+  "stock_out": "Stock out",
+  "total_order": "Total Order",
+  "order_management": "Order Management",
+  "coupon_code": "Coupon Code",
+  "brand": "Brand",
+  "product_media": "Product Media",
+  "product_list": "Product List",
+  "product_reviews": "Product Reviews",
+  "admin_role": "Admin role",
+  "control_authority": "Control Authority",
+  "your_shop": "Your Shop",
+  "pending_canceled": "Pending & Canceled"
 }

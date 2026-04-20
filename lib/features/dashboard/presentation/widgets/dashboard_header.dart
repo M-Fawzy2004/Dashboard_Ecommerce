@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,31 +8,37 @@ class DashboardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(15.r),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.r),
-        gradient: const LinearGradient(
-          colors: [AppColors.slate, Color(0xFF0E2A4A)],
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'dashboard_title'.tr(),
-            style: Theme.of(context).textTheme.headlineSmall,
+            'Dashboard',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24.sp,
+                ),
           ),
-          SizedBox(height: 5.h),
-          Text(
-            'dashboard_subtitle'.tr(),
-            style: Theme.of(context).textTheme.bodyMedium,
+          Row(
+            children: [
+              Text(
+                'Last update: ',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
+              ),
+              Text(
+                'Oct 20, 2026',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 }
+

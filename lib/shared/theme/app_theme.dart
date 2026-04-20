@@ -9,25 +9,36 @@ class AppTheme {
   static ThemeData get light {
     final base = ThemeData.light(useMaterial3: true);
     return base.copyWith(
-      scaffoldBackgroundColor: AppColors.deepNavy,
+      scaffoldBackgroundColor: AppColors.background,
       colorScheme: const ColorScheme.light(
-        primary: AppColors.electricBlue,
-        secondary: AppColors.metallicGold,
-        surface: AppColors.surface,
+        primary: AppColors.primary,
+        secondary: AppColors.secondary,
+        surface: AppColors.card,
+        error: AppColors.error,
       ),
+      dividerColor: AppColors.divider,
       textTheme: base.textTheme.apply(
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ).copyWith(
-        headlineSmall: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700),
-        titleMedium: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+        headlineSmall: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+        titleMedium: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         bodyMedium: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
+        bodySmall: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: IconThemeData(color: AppColors.textPrimary),
       ),
-      cardColor: AppColors.slate,
+      cardTheme: CardThemeData(
+        color: AppColors.card,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          side: const BorderSide(color: AppColors.divider),
+        ),
+      ),
     );
   }
 }

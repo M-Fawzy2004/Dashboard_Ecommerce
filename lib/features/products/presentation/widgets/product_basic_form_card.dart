@@ -12,12 +12,12 @@ class ProductBasicFormCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.electricBlue.withValues(alpha: 0.06),
+            color: AppColors.accent.withValues(alpha: 0.06),
             blurRadius: 24.r,
             offset: Offset(0, 12.h),
           ),
@@ -151,10 +151,10 @@ class ProductBasicFormCard extends StatelessWidget {
           width: 30.w,
           height: 30.w,
           decoration: BoxDecoration(
-            color: AppColors.electricBlue.withValues(alpha: 0.1),
+            color: AppColors.accent.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(icon, size: 16.sp, color: AppColors.electricBlue),
+          child: Icon(icon, size: 16.sp, color: AppColors.accent),
         ),
         SizedBox(width: 8.w),
         Text(
@@ -244,8 +244,8 @@ class ProductBasicFormCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.radio_button_checked, size: 16.sp, color: AppColors.electricBlue),
-          SizedBox(width: 4.w),
+          Icon(Icons.radio_button_checked, size: 16.sp, color: AppColors.accent),
+          SizedBox(width: 8.w),
           Text('yes'.tr(), style: TextStyle(fontSize: 12.sp)),
           SizedBox(width: 10.w),
           Icon(Icons.radio_button_off, size: 16.sp, color: AppColors.textSecondary),

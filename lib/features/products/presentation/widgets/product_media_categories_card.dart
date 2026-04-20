@@ -12,12 +12,12 @@ class ProductMediaCategoriesCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.electricBlue.withValues(alpha: 0.05),
+            color: AppColors.accent.withValues(alpha: 0.05),
             blurRadius: 22.r,
             offset: Offset(0, 12.h),
           ),
@@ -128,10 +128,10 @@ class ProductMediaCategoriesCard extends StatelessWidget {
           width: 30.w,
           height: 30.w,
           decoration: BoxDecoration(
-            color: AppColors.electricBlue.withValues(alpha: 0.1),
+            color: AppColors.accent.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(icon, size: 16.sp, color: AppColors.electricBlue),
+          child: Icon(icon, size: 16.sp, color: AppColors.accent),
         ),
         SizedBox(width: 8.w),
         Text(key.tr(), style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700)),

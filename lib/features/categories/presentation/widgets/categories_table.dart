@@ -20,7 +20,7 @@ class CategoriesTable extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(18.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: SingleChildScrollView(

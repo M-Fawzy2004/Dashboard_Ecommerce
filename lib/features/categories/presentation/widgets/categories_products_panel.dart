@@ -24,7 +24,7 @@ class CategoriesProductsPanel extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Column(
@@ -143,7 +143,7 @@ class CategoriesProductsPanel extends StatelessWidget {
       width: 32.w,
       height: 32.w,
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
       ),

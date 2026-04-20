@@ -15,7 +15,7 @@ class ProductsHeader extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         gradient: const LinearGradient(
-          colors: [AppColors.slate, Color(0xFFE7F0FF)],
+          colors: [AppColors.background, Color(0xFFE7F0FF)],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),

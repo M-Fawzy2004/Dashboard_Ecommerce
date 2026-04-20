@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 import '../../../../../shared/widgets/language_menu_button.dart';
 import '../../../dashboard/presentation/widgets/side_nav.dart';
-import '../widgets/orders_filters.dart';
 import '../widgets/orders_header.dart';
 import '../widgets/orders_table.dart';
 import '../widgets/orders_totals_row.dart';
@@ -53,11 +52,9 @@ class OrdersPageBody extends StatelessWidget {
                     ),
                     AppSpacing.v20,
                     const OrdersHeader(),
-                    AppSpacing.v20,
+                    AppSpacing.v25,
                     const OrdersTotalsRow(),
-                    AppSpacing.v20,
-                    const OrdersFilters(),
-                    AppSpacing.v20,
+                    AppSpacing.v25,
                     const OrdersTable(),
                   ],
                 ),

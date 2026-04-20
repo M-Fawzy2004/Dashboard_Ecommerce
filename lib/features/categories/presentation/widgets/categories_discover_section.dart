@@ -24,8 +24,8 @@ class CategoriesDiscoverSection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
-        borderRadius: BorderRadius.circular(14.r),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,9 +97,9 @@ class _CategoryCard extends StatelessWidget {
               color: const Color(0xFFEAF1FF),
               borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Icon(Icons.image_outlined, size: 20.sp, color: AppColors.electricBlue),
+            child: Icon(Icons.image_outlined, size: 20.sp, color: AppColors.accent),
           ),
-          SizedBox(width: 10.w),
+          SizedBox(width: 12.w),
           Expanded(
             child: Text(
               titleKey.tr(),

@@ -17,18 +17,18 @@ class LanguageMenuButton extends StatelessWidget {
         width: 46.w,
         height: 46.w,
         decoration: BoxDecoration(
-          color: AppColors.slate,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.electricBlue.withValues(alpha: 0.22)),
+          border: Border.all(color: AppColors.accent.withValues(alpha: 0.22)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.electricBlue.withValues(alpha: 0.10),
+              color: AppColors.accent.withValues(alpha: 0.10),
               blurRadius: 16.r,
               offset: Offset(0, 6.h),
             ),
           ],
         ),
-        child: Icon(Icons.language_rounded, size: 22.sp, color: AppColors.electricBlue),
+        child: Icon(Icons.language_rounded, size: 22.sp, color: AppColors.accent),
       ),
       itemBuilder: (_) => const [
         PopupMenuItem(value: Locale('en'), child: Text('English')),

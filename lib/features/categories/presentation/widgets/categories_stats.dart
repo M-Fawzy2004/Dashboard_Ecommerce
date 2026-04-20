@@ -10,7 +10,7 @@ class CategoriesStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stats = <_CategoryStat>[
-      _CategoryStat('total_categories', '26', Icons.category_rounded, AppColors.electricBlue),
+      _CategoryStat('total_categories', '26', Icons.category_rounded, AppColors.accent),
       _CategoryStat('active_categories', '22', Icons.check_circle_rounded, AppColors.success),
       _CategoryStat('empty_categories', '4', Icons.inbox_rounded, AppColors.warning),
     ];
@@ -24,7 +24,7 @@ class CategoriesStats extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(16.r),
                   decoration: BoxDecoration(
-                    color: AppColors.slate,
+                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(color: item.color.withValues(alpha: 0.25)),
                   ),

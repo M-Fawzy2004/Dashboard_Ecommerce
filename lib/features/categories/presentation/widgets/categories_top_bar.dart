@@ -24,7 +24,7 @@ class CategoriesTopBar extends StatelessWidget {
               hintStyle: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
               prefixIcon: Icon(Icons.search_rounded, size: 18.sp),
               filled: true,
-              fillColor: AppColors.slate,
+              fillColor: AppColors.card,
               contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24.r),
@@ -42,8 +42,8 @@ class CategoriesTopBar extends StatelessWidget {
           width: 34.w,
           height: 34.w,
           decoration: BoxDecoration(
-            color: AppColors.slate,
-            borderRadius: BorderRadius.circular(18.r),
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Icon(Icons.notifications_none_rounded, size: 18.sp),
         ),

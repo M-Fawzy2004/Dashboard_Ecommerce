@@ -15,7 +15,7 @@ class CategoriesHeader extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         gradient: const LinearGradient(
-          colors: [AppColors.slate, Color(0xFFE8F0FF)],
+          colors: [AppColors.background, Color(0xFFE8F0FF)],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),

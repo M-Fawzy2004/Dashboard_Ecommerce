@@ -10,10 +10,10 @@ class ProductsInventoryCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cards = <_InventoryCardItem>[
-      _InventoryCardItem('total_products', '3,284', Icons.inventory_2_rounded, AppColors.electricBlue),
+      _InventoryCardItem('total_products', '3,284', Icons.inventory_2_rounded, AppColors.accent),
       _InventoryCardItem('in_stock', '2,942', Icons.check_circle_rounded, AppColors.success),
       _InventoryCardItem('low_stock', '184', Icons.warning_amber_rounded, AppColors.warning),
-      _InventoryCardItem('top_selling', '158', Icons.local_fire_department_rounded, AppColors.metallicGold),
+      _InventoryCardItem('top_selling', '158', Icons.local_fire_department_rounded, AppColors.warning),
     ];
 
     return GridView.builder(
@@ -41,7 +41,7 @@ class _InventoryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.slate,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: item.color.withValues(alpha: 0.25)),
       ),
