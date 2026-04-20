@@ -61,10 +61,10 @@ class OrdersTable extends StatelessWidget {
             // Table Header
             Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F5E9).withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(4.r),
+                color: AppColors.primary.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
               child: Row(
                 children: [
                   _buildHeaderCell('No.', flex: 1),
@@ -289,24 +289,24 @@ class _OrderRow extends StatelessWidget {
 
     switch (status) {
       case 'Delivered':
-        color = AppColors.primary;
-        icon = Icons.local_shipping_outlined;
-        bgColor = const Color(0xFFE8F5E9);
+        color = AppColors.success;
+        icon = Icons.check_circle_outline;
+        bgColor = AppColors.success.withValues(alpha: 0.1);
         break;
       case 'Pending':
-        color = const Color(0xFFF59E0B);
+        color = AppColors.warning;
         icon = Icons.access_time;
-        bgColor = const Color(0xFFFFF7ED);
+        bgColor = AppColors.warning.withValues(alpha: 0.1);
         break;
       case 'Shipped':
-        color = const Color(0xFF1E293B);
-        icon = Icons.local_post_office_outlined;
-        bgColor = const Color(0xFFF1F5F9);
+        color = AppColors.primary;
+        icon = Icons.local_shipping_outlined;
+        bgColor = AppColors.primary.withValues(alpha: 0.1);
         break;
       case 'Cancelled':
         color = AppColors.error;
         icon = Icons.cancel_outlined;
-        bgColor = const Color(0xFFFEF2F2);
+        bgColor = AppColors.error.withValues(alpha: 0.1);
         break;
       default:
         color = AppColors.textSecondary;

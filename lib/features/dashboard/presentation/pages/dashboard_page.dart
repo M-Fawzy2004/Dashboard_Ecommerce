@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
-import 'dashboard_page_body.dart';
+import 'main_dashboard_shell.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: DashboardPageBody());
+    return const MainDashboardShell(initialPage: 'home');
   }
 }

@@ -3,20 +3,24 @@ import 'package:flutter/material.dart';
 class AppColors {
   const AppColors._();
 
-  static const Color background = Color(0xFFF8F9FA);
+  static const Color background = Color(0xFFF1F1F1);
   static const Color card = Color(0xFFFFFFFF);
-  static const Color primary = Color(0xFF52A87B); // Green from the image
-  static const Color secondary = Color(0xFF64748B);
-  static const Color accent = Color(0xFF2563EB);
+  
+  // Theme Colors - Deep Indigo Primary
+  static const Color primary = Color(0xFF6366F1);   // Indigo
+  static const Color secondary = Color(0xFF0F172A); // Slate Dark
+  static const Color dark = Color(0xFF0F172A);      // Slate Dark
+  static const Color accent = Color(0xFF4F46E5);    // Darker Indigo
+  
   static const Color textPrimary = Color(0xFF1E293B);
   static const Color textSecondary = Color(0xFF64748B);
-  static const Color success = Color(0xFF2ECC71);
-  static const Color error = Color(0xFFE74C3C);
-  static const Color warning = Color(0xFFF1C40F);
+  
+  static const Color success = Color(0xFF10B981);
+  static const Color error = Color(0xFFEF4444);
+  static const Color warning = Color(0xFFF59E0B);
   static const Color divider = Color(0xFFE2E8F0);
   
   // Chart Colors
-  static const Color chartLine = Color(0xFF52A87B);
-  static const Color chartFill = Color(0xFFE8F5E9);
+  static const Color chartLine = Color(0xFF6366F1);
+  static const Color chartFill = Color(0xFFEEF2FF);
 }
-

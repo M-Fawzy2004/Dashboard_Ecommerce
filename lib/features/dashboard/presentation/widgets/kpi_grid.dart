@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../shared/widgets/enhanced_kpi_card.dart';
 import '../../../../../shared/theme/app_spacing.dart';
@@ -12,19 +11,19 @@ class KpiGrid extends StatelessWidget {
       children: [
         Expanded(
           child: EnhancedKpiCard(
-            title: 'total_sales'.tr(),
+            title: 'Total Sales',
             subtitle: 'Last 7 days',
             value: r'$350K',
             trend: '10.4%',
             isPositive: true,
-            previousValue: r'Previous 7 days ($235)',
+            previousValue: r'Previous 7 days ($235K)',
             onDetailsPressed: () {},
           ),
         ),
         AppSpacing.h25,
         Expanded(
           child: EnhancedKpiCard(
-            title: 'total_orders'.tr(),
+            title: 'Total Orders',
             subtitle: 'Last 7 days',
             value: '10.7K',
             trend: '14.4%',
@@ -36,11 +35,11 @@ class KpiGrid extends StatelessWidget {
         AppSpacing.h25,
         Expanded(
           child: EnhancedKpiCard(
-            title: 'pending_canceled'.tr(),
-            subtitle: 'Last 7 days',
+            title: 'Inventory Status',
+            subtitle: 'Real-time',
             isMultiValue: true,
             multiValues: const [
-              {'label': 'Pending', 'value': '509', 'sub': 'user 204'},
+              {'label': 'Pending', 'value': '509', 'sub': 'active products'},
               {'label': 'Canceled', 'value': '94', 'sub': '14.4%', 'trend': 'down'},
             ],
             onDetailsPressed: () {},
@@ -50,4 +49,4 @@ class KpiGrid extends StatelessWidget {
     );
   }
 }
-
+

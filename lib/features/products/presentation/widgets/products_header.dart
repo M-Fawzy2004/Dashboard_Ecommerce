@@ -1,7 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../shared/theme/app_colors.dart';
 
 class ProductsHeader extends StatelessWidget {
@@ -24,13 +22,12 @@ class ProductsHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'products_title'.tr(),
-            style: Theme.of(context).textTheme.headlineSmall,
+            'Products',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
           ),
           SizedBox(height: 8.h),
-          Text(
-            'products_subtitle'.tr(),
-            style: Theme.of(context).textTheme.bodyMedium,
+          const Text(
+            'Manage and monitor your product inventory and stock performance.',
           ),
         ],
       ),
