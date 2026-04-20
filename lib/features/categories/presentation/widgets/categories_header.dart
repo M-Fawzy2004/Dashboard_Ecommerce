@@ -4,18 +4,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
 
-class DashboardHeader extends StatelessWidget {
-  const DashboardHeader({super.key});
+class CategoriesHeader extends StatelessWidget {
+  const CategoriesHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(15.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.r),
+        borderRadius: BorderRadius.circular(16.r),
         gradient: const LinearGradient(
-          colors: [AppColors.slate, Color(0xFF0E2A4A)],
+          colors: [AppColors.slate, Color(0xFFE8F0FF)],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),
@@ -23,15 +23,9 @@ class DashboardHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'dashboard_title'.tr(),
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          SizedBox(height: 5.h),
-          Text(
-            'dashboard_subtitle'.tr(),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text('categories_title'.tr(), style: Theme.of(context).textTheme.headlineSmall),
+          SizedBox(height: 8.h),
+          Text('categories_subtitle'.tr(), style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

@@ -18,11 +18,12 @@ class SideNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = <_NavItem>[
       _NavItem(Icons.home_rounded, 'home'),
-      _NavItem(Icons.insights_rounded, 'analytics'),
+      _NavItem(Icons.category_rounded, 'categories'),
       _NavItem(Icons.receipt_long_rounded, 'orders'),
       _NavItem(Icons.group_rounded, 'customers'),
       _NavItem(Icons.settings_rounded, 'settings'),
       _NavItem(Icons.inventory_2_rounded, 'products'),
+      _NavItem(Icons.add_box_rounded, 'add_products'),
     ];
 
     return Container(

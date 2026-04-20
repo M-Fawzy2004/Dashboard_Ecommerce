@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../shared/theme/app_spacing.dart';
+import '../../../../../shared/widgets/language_menu_button.dart';
 import '../../../dashboard/presentation/widgets/side_nav.dart';
-import '../widgets/add_product_top_bar.dart';
-import '../widgets/product_basic_form_card.dart';
-import '../widgets/product_media_categories_card.dart';
+import '../widgets/products_header.dart';
+import '../widgets/products_inventory_cards.dart';
+import '../widgets/products_table.dart';
+import '../widgets/top_selling_products.dart';
 
 class ProductsPageBody extends StatelessWidget {
   const ProductsPageBody({super.key});
@@ -30,6 +32,10 @@ class ProductsPageBody extends StatelessWidget {
                       Navigator.of(context).pushReplacementNamed('/dashboard');
                     } else if (key == 'orders') {
                       Navigator.of(context).pushReplacementNamed('/orders');
+                    } else if (key == 'categories') {
+                      Navigator.of(context).pushReplacementNamed('/categories');
+                    } else if (key == 'add_products') {
+                      Navigator.of(context).pushReplacementNamed('/add-products');
                     }
                   },
                 ),
@@ -41,16 +47,18 @@ class ProductsPageBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const AddProductTopBar(),
-                    AppSpacing.v20,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 3, child: const ProductBasicFormCard()),
-                        SizedBox(width: 16.w),
-                        Expanded(flex: 2, child: const ProductMediaCategoriesCard()),
-                      ],
+                    const Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: LanguageMenuButton(),
                     ),
+                    AppSpacing.v20,
+                    const ProductsHeader(),
+                    AppSpacing.v20,
+                    const ProductsInventoryCards(),
+                    AppSpacing.v20,
+                    const TopSellingProducts(),
+                    AppSpacing.v20,
+                    const ProductsTable(),
                   ],
                 ),
               ),

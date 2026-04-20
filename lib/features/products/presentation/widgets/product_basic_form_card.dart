@@ -10,16 +10,23 @@ class ProductBasicFormCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.slate,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.electricBlue.withValues(alpha: 0.06),
+            blurRadius: 24.r,
+            offset: Offset(0, 12.h),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('basic_details'),
+          _sectionTitle('basic_details', Icons.article_outlined),
           SizedBox(height: 12.h),
           _fieldLabel('product_name'),
           _inputBox('iPhone 15'),
@@ -29,7 +36,7 @@ class ProductBasicFormCard extends StatelessWidget {
             'The iPhone 15 delivers cutting-edge performance with the A16 Bionic chip, an immersive display, and advanced dual-camera system.',
           ),
           SizedBox(height: 16.h),
-          _sectionTitle('pricing'),
+          _sectionTitle('pricing', Icons.payments_outlined),
           SizedBox(height: 12.h),
           _fieldLabel('product_price'),
           _priceRow(),
@@ -67,7 +74,7 @@ class ProductBasicFormCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          _sectionTitle('inventory'),
+          _sectionTitle('inventory', Icons.inventory_2_outlined),
           SizedBox(height: 12.h),
           Row(
             children: [
@@ -113,11 +120,21 @@ class ProductBasicFormCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              OutlinedButton(onPressed: () {}, child: Text('save_to_draft'.tr())),
+              OutlinedButton(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                  side: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+                ),
+                child: Text('save_to_draft'.tr()),
+              ),
               SizedBox(width: 8.w),
               ElevatedButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF4CB87B)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CB87B),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                ),
                 child: Text('publish_product'.tr()),
               ),
             ],
@@ -127,10 +144,24 @@ class ProductBasicFormCard extends StatelessWidget {
     );
   }
 
-  Widget _sectionTitle(String key) {
-    return Text(
-      key.tr(),
-      style: TextStyle(fontSize: 28.sp / 2, fontWeight: FontWeight.w700),
+  Widget _sectionTitle(String key, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          width: 30.w,
+          height: 30.w,
+          decoration: BoxDecoration(
+            color: AppColors.electricBlue.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Icon(icon, size: 16.sp, color: AppColors.electricBlue),
+        ),
+        SizedBox(width: 8.w),
+        Text(
+          key.tr(),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
+        ),
+      ],
     );
   }
 
@@ -149,9 +180,9 @@ class ProductBasicFormCard extends StatelessWidget {
       height: 42.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FC),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Row(
         children: [
@@ -173,9 +204,9 @@ class ProductBasicFormCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FC),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Text(value, style: TextStyle(fontSize: 12.sp, height: 1.4)),
     );
@@ -186,9 +217,9 @@ class ProductBasicFormCard extends StatelessWidget {
       height: 42.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FC),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Row(
         children: [
@@ -207,9 +238,9 @@ class ProductBasicFormCard extends StatelessWidget {
       height: 42.h,
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FC),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Row(
         children: [

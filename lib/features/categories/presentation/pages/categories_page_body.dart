@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../shared/theme/app_spacing.dart';
-import '../../../../../shared/widgets/language_menu_button.dart';
-import '../widgets/dashboard_header.dart';
-import '../widgets/kpi_grid.dart';
-import '../widgets/recent_orders_table.dart';
-import '../widgets/side_nav.dart';
-import '../widgets/weekly_revenue_card.dart';
+import '../../../dashboard/presentation/widgets/side_nav.dart';
+import '../widgets/categories_discover_section.dart';
+import '../widgets/categories_products_panel.dart';
+import '../widgets/categories_top_bar.dart';
 
-class DashboardPageBody extends StatelessWidget {
-  const DashboardPageBody({super.key});
+class CategoriesPageBody extends StatelessWidget {
+  const CategoriesPageBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +24,12 @@ class DashboardPageBody extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: SideNav(
-                  activeKey: 'home',
+                  activeKey: 'categories',
                   onItemTap: (key) {
-                    if (key == 'orders') {
+                    if (key == 'home') {
+                      Navigator.of(context).pushReplacementNamed('/dashboard');
+                    } else if (key == 'orders') {
                       Navigator.of(context).pushReplacementNamed('/orders');
-                    } else if (key == 'categories') {
-                      Navigator.of(context).pushReplacementNamed('/categories');
                     } else if (key == 'products') {
                       Navigator.of(context).pushReplacementNamed('/products');
                     } else if (key == 'add_products') {
@@ -47,18 +45,11 @@ class DashboardPageBody extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Align(
-                      alignment: AlignmentDirectional.topEnd,
-                      child: LanguageMenuButton(),
-                    ),
+                    const CategoriesTopBar(),
                     AppSpacing.v20,
-                    const DashboardHeader(),
+                    const CategoriesDiscoverSection(),
                     AppSpacing.v20,
-                    const KpiGrid(),
-                    AppSpacing.v20,
-                    const WeeklyRevenueCard(),
-                    AppSpacing.v20,
-                    const RecentOrdersTable(),
+                    const CategoriesProductsPanel(),
                   ],
                 ),
               ),

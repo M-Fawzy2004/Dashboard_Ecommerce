@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'features/categories/presentation/pages/categories_page.dart';
 import 'features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/orders/presentation/pages/orders_page.dart';
+import 'features/products/presentation/pages/add_product_page.dart';
 import 'features/products/presentation/pages/products_page.dart';
 import 'shared/theme/app_theme.dart';
 
@@ -40,8 +41,10 @@ class DashboardApp extends StatelessWidget {
           initialRoute: '/dashboard',
           routes: {
             '/dashboard': (_) => const DashboardPage(),
+            '/categories': (_) => const CategoriesPage(),
             '/orders': (_) => const OrdersPage(),
             '/products': (_) => const ProductsPage(),
+            '/add-products': (_) => const AddProductPage(),
           },
           home: child,
         );

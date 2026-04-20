@@ -10,19 +10,23 @@ class ProductMediaCategoriesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(18.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.slate,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.electricBlue.withValues(alpha: 0.05),
+            blurRadius: 22.r,
+            offset: Offset(0, 12.h),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'upload_product_image'.tr(),
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-          ),
+          _sectionTitle('upload_product_image', Icons.cloud_upload_outlined),
           SizedBox(height: 12.h),
           Container(
             width: double.infinity,
@@ -83,10 +87,7 @@ class ProductMediaCategoriesCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 14.h),
-          Text(
-            'category'.tr(),
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-          ),
+          _sectionTitle('category', Icons.category_outlined),
           SizedBox(height: 10.h),
           _fieldLabel('product_categories'),
           _dropdownBox(),
@@ -120,6 +121,24 @@ class ProductMediaCategoriesCard extends StatelessWidget {
     );
   }
 
+  Widget _sectionTitle(String key, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          width: 30.w,
+          height: 30.w,
+          decoration: BoxDecoration(
+            color: AppColors.electricBlue.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Icon(icon, size: 16.sp, color: AppColors.electricBlue),
+        ),
+        SizedBox(width: 8.w),
+        Text(key.tr(), style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700)),
+      ],
+    );
+  }
+
   Widget _smallButton(String key, IconData icon) {
     return OutlinedButton.icon(
       onPressed: () {},
@@ -128,6 +147,7 @@ class ProductMediaCategoriesCard extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         minimumSize: Size(100.w, 34.h),
         side: BorderSide(color: Colors.black.withValues(alpha: 0.1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
       ),
     );
   }
@@ -148,9 +168,9 @@ class ProductMediaCategoriesCard extends StatelessWidget {
       height: 42.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F9FC),
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+        color: const Color(0xFFF8FAFF),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Row(
         children: [
