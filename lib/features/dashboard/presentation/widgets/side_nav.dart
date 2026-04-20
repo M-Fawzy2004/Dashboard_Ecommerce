@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
 
 class SideNav extends StatelessWidget {
   const SideNav({
@@ -103,7 +105,13 @@ class SideNav extends StatelessWidget {
               style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary),
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: const Icon(Icons.logout, size: 18),
+            trailing: IconButton(
+              icon: const Icon(Icons.logout, size: 18),
+              onPressed: () {
+                context.read<AuthCubit>().logout();
+                Navigator.of(context).pushReplacementNamed('/login');
+              },
+            ),
           ),
           AppSpacing.v10,
           SizedBox(
@@ -206,4 +214,3 @@ class _NavItem {
   final String label;
   final String key;
 }
-
