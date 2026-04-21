@@ -40,37 +40,70 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 600) {
+                return Column(
                   children: [
-                    const ProductFormLabel('Stock Quantity'),
-                    _StockInput(
-                      controller: _stockCtrl,
-                      unlimited: _unlimitedStock,
-                      onToggle: (v) => setState(() => _unlimitedStock = v),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Stock Quantity'),
+                        _StockInput(
+                          controller: _stockCtrl,
+                          unlimited: _unlimitedStock,
+                          onToggle: (v) => setState(() => _unlimitedStock = v),
+                        ),
+                      ],
+                    ),
+                    AppSpacing.v16,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Stock Status'),
+                        _StatusSelector(
+                          currentStatus: _stockStatus,
+                          options: _statusOptions,
+                          onChanged: (v) => setState(() => _stockStatus = v),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ),
-              SizedBox(width: 20.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ProductFormLabel('Stock Status'),
-                    _StatusSelector(
-                      currentStatus: _stockStatus,
-                      options: _statusOptions,
-                      onChanged: (v) => setState(() => _stockStatus = v),
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Stock Quantity'),
+                        _StockInput(
+                          controller: _stockCtrl,
+                          unlimited: _unlimitedStock,
+                          onToggle: (v) => setState(() => _unlimitedStock = v),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                  SizedBox(width: 20.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Stock Status'),
+                        _StatusSelector(
+                          currentStatus: _stockStatus,
+                          options: _statusOptions,
+                          onChanged: (v) => setState(() => _stockStatus = v),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           AppSpacing.v20,
           Row(
@@ -108,34 +141,43 @@ class _StockInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: unlimited
-                ? Text('Unlimited Stock', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.success))
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+                    child: Text('Unlimited Stock', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.success)),
+                  )
                 : TextField(
                     controller: controller,
                     textAlignVertical: TextAlignVertical.center,
                     keyboardType: TextInputType.number,
                     style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
-                    decoration: const InputDecoration(hintText: '0', border: InputBorder.none, isDense: true),
+                    decoration: InputDecoration(
+                      hintText: '0',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+                    ),
                   ),
           ),
-          VerticalDivider(width: 24.w, indent: 15.h, endIndent: 15.h, color: Colors.black12),
-          Transform.scale(
-            scale: 0.8,
-            child: Switch(
-              value: unlimited,
-              onChanged: onToggle,
-              activeTrackColor: AppColors.success.withValues(alpha: 0.2),
-              activeThumbColor: AppColors.success,
+          Container(height: 30.h, width: 1, color: Colors.black12),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Transform.scale(
+              scale: 0.8,
+              child: Switch(
+                value: unlimited,
+                onChanged: onToggle,
+                activeTrackColor: AppColors.success.withValues(alpha: 0.2),
+                activeThumbColor: AppColors.success,
+              ),
             ),
           ),
         ],
@@ -197,8 +239,6 @@ class _SimpleInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
@@ -212,7 +252,7 @@ class _SimpleInput extends StatelessWidget {
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.black26),
           border: InputBorder.none,
-          isDense: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
         ),
       ),
     );

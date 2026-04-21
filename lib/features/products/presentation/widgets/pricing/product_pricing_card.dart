@@ -63,40 +63,76 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 600) {
+                return Column(
                   children: [
-                    const ProductFormLabel('Base Price'),
-                    _PriceInput(
-                      controller: _priceCtrl,
-                      currency: _selectedCurrency,
-                      onCurrencyTap: _showCurrencyPicker,
-                      onChanged: (_) => setState(() {}),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Base Price'),
+                        _PriceInput(
+                          controller: _priceCtrl,
+                          currency: _selectedCurrency,
+                          onCurrencyTap: _showCurrencyPicker,
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
+                    ),
+                    AppSpacing.v16,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Discounted Price', isOptional: true),
+                        _PriceInput(
+                          controller: _salePriceCtrl,
+                          currency: _selectedCurrency,
+                          hint: 'E.g. 899',
+                          isSale: true,
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ),
-              SizedBox(width: 20.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ProductFormLabel('Discounted Price', isOptional: true),
-                    _PriceInput(
-                      controller: _salePriceCtrl,
-                      currency: _selectedCurrency,
-                      hint: 'E.g. 899',
-                      isSale: true,
-                      onChanged: (_) => setState(() {}),
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Base Price'),
+                        _PriceInput(
+                          controller: _priceCtrl,
+                          currency: _selectedCurrency,
+                          onCurrencyTap: _showCurrencyPicker,
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                  SizedBox(width: 20.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ProductFormLabel('Discounted Price', isOptional: true),
+                        _PriceInput(
+                          controller: _salePriceCtrl,
+                          currency: _selectedCurrency,
+                          hint: 'E.g. 899',
+                          isSale: true,
+                          onChanged: (_) => setState(() {}),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           if (_discountPercent > 0) ...[
             AppSpacing.v16,
@@ -159,19 +195,20 @@ class _PriceInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
             onTap: onCurrencyTap,
             child: Container(
               width: 65.w,
               margin: EdgeInsets.all(6.r),
+              padding: EdgeInsets.symmetric(vertical: 14.h),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10.r),
@@ -200,8 +237,7 @@ class _PriceInput extends StatelessWidget {
                 hintText: hint,
                 hintStyle: TextStyle(fontSize: 14.sp, color: Colors.black26),
                 border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
               ),
             ),
           ),
@@ -231,9 +267,11 @@ class _DiscountInfoBar extends StatelessWidget {
         children: [
           Icon(Icons.stars_rounded, color: AppColors.success, size: 16.sp),
           SizedBox(width: 8.w),
-          Text(
-            'Customers will save $currencySymbol${discountAmount.toStringAsFixed(2)} on this purchase',
-            style: TextStyle(fontSize: 12.sp, color: AppColors.success, fontWeight: FontWeight.w600),
+          Expanded(
+            child: Text(
+              'Customers will save $currencySymbol${discountAmount.toStringAsFixed(2)} on this purchase',
+              style: TextStyle(fontSize: 12.sp, color: AppColors.success, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),

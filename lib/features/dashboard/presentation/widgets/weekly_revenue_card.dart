@@ -15,27 +15,34 @@ class WeeklyRevenueCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 10.w,
+              runSpacing: 10.h,
               children: [
                 Text('Report for this week', style: Theme.of(context).textTheme.titleMedium),
-                Row(
+                Wrap(
+                  spacing: 8.w,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     const _ToggleBtn(label: 'This week', active: true),
-                    SizedBox(width: 8.w),
                     const _ToggleBtn(label: 'Last week', active: false),
-                    SizedBox(width: 8.w),
                     IconButton(
                       icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
                       onPressed: () {},
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
                     ),
                   ],
                 ),
               ],
             ),
             AppSpacing.v20,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              spacing: 16.w,
+              runSpacing: 16.h,
+              alignment: WrapAlignment.spaceBetween,
               children: const [
                 _StatItem(label: 'Customers', value: '52k'),
                 _StatItem(label: 'Total Products', value: '3.5k'),

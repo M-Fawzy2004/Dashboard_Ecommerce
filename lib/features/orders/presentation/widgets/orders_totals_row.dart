@@ -7,10 +7,12 @@ class OrdersTotalsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: EnhancedKpiCard(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 800;
+        
+        final cards = [
+          const EnhancedKpiCard(
             title: 'Total Orders',
             subtitle: 'Last 7 days',
             value: '1,240',
@@ -18,10 +20,7 @@ class OrdersTotalsRow extends StatelessWidget {
             isPositive: true,
             showDetailsButton: false,
           ),
-        ),
-        AppSpacing.h15,
-        Expanded(
-          child: EnhancedKpiCard(
+          const EnhancedKpiCard(
             title: 'New Orders',
             subtitle: 'Last 7 days',
             value: '240',
@@ -29,10 +28,7 @@ class OrdersTotalsRow extends StatelessWidget {
             isPositive: true,
             showDetailsButton: false,
           ),
-        ),
-        AppSpacing.h15,
-        Expanded(
-          child: EnhancedKpiCard(
+          const EnhancedKpiCard(
             title: 'Completed Orders',
             subtitle: 'Last 7 days',
             value: '960',
@@ -40,10 +36,7 @@ class OrdersTotalsRow extends StatelessWidget {
             isPositive: true,
             showDetailsButton: false,
           ),
-        ),
-        AppSpacing.h15,
-        Expanded(
-          child: EnhancedKpiCard(
+          const EnhancedKpiCard(
             title: 'Canceled Orders',
             subtitle: 'Last 7 days',
             value: '87',
@@ -51,8 +44,30 @@ class OrdersTotalsRow extends StatelessWidget {
             isPositive: false,
             showDetailsButton: false,
           ),
-        ),
-      ],
+        ];
+
+        if (isMobile) {
+          return Column(
+            children: [
+              Row(children: [Expanded(child: cards[0]), AppSpacing.h15, Expanded(child: cards[1])]),
+              AppSpacing.v16,
+              Row(children: [Expanded(child: cards[2]), AppSpacing.h15, Expanded(child: cards[3])]),
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(child: cards[0]),
+            AppSpacing.h15,
+            Expanded(child: cards[1]),
+            AppSpacing.h15,
+            Expanded(child: cards[2]),
+            AppSpacing.h15,
+            Expanded(child: cards[3]),
+          ],
+        );
+      },
     );
   }
 }

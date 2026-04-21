@@ -24,14 +24,16 @@ class OrdersTable extends StatelessWidget {
         padding: EdgeInsets.all(20.r),
         child: Column(
           children: [
-            // Tabs and Actions Row
-            Row(
+            // Tabs and Actions Wrap
+            Wrap(
+              spacing: 12.w,
+              runSpacing: 12.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 _buildTab('All order', '(240)', true),
                 _buildTab('Completed', null, false),
                 _buildTab('Pending', null, false),
                 _buildTab('Canceled', null, false),
-                const Spacer(),
                 SizedBox(
                   width: 200.w,
                   height: 36.h,
@@ -49,46 +51,63 @@ class OrdersTable extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 12.w),
                 _buildIconBtn(Icons.filter_list),
-                SizedBox(width: 8.w),
                 _buildIconBtn(Icons.swap_vert),
-                SizedBox(width: 8.w),
                 _buildIconBtn(Icons.more_horiz),
               ],
             ),
             AppSpacing.v20,
-            // Table Header
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(8.r),
+            // Scrollable Table Area
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minWidth: 1000.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Table Header
+                    Container(
+                      width: 1000.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
+                      child: Row(
+                        children: [
+                          _buildHeaderCell('No.', flex: 1),
+                          _buildHeaderCell('Order Id', flex: 2),
+                          _buildHeaderCell('Product', flex: 4),
+                          _buildHeaderCell('Date', flex: 2),
+                          _buildHeaderCell('Price', flex: 2),
+                          _buildHeaderCell('Payment', flex: 2),
+                          _buildHeaderCell('Status', flex: 2),
+                        ],
+                      ),
+                    ),
+                    // Table Body
+                    SizedBox(
+                      width: 1000.w,
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: dummyOrders.length,
+                        separatorBuilder: (context, index) => const Divider(height: 1),
+                        itemBuilder: (_, index) => _OrderRow(index: index + 1, order: dummyOrders[index]),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 16.w),
-              child: Row(
-                children: [
-                  _buildHeaderCell('No.', flex: 1),
-                  _buildHeaderCell('Order Id', flex: 2),
-                  _buildHeaderCell('Product', flex: 4),
-                  _buildHeaderCell('Date', flex: 2),
-                  _buildHeaderCell('Price', flex: 2),
-                  _buildHeaderCell('Payment', flex: 2),
-                  _buildHeaderCell('Status', flex: 2),
-                ],
-              ),
-            ),
-            // Table Body
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: dummyOrders.length,
-              separatorBuilder: (context, index) => const Divider(height: 1),
-              itemBuilder: (_, index) => _OrderRow(index: index + 1, order: dummyOrders[index]),
             ),
             AppSpacing.v25,
             // Pagination
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 12.w,
+              runSpacing: 16.h,
               children: [
                 OutlinedButton.icon(
                   onPressed: () {},
@@ -96,7 +115,10 @@ class OrdersTable extends StatelessWidget {
                   label: const Text('Previous'),
                   style: _btnStyle,
                 ),
-                Row(
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 4.w,
+                  runSpacing: 8.h,
                   children: [
                     _buildPageNum('1', active: true),
                     _buildPageNum('2'),

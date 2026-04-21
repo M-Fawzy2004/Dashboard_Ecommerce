@@ -31,15 +31,15 @@ class ProductCategorySelectorCard extends StatelessWidget {
             ),
           ),
           AppSpacing.v16,
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 9,
-              crossAxisSpacing: 10.w,
-              mainAxisSpacing: 10.h,
-              childAspectRatio: 1.1,
-            ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 90.w,
+                crossAxisSpacing: 10.w,
+                mainAxisSpacing: 10.h,
+                childAspectRatio: 1.1,
+              ),
             itemCount: CategoryConfig.all.length,
             itemBuilder: (context, index) {
               final cat = CategoryConfig.all[index];

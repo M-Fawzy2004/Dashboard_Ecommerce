@@ -41,43 +41,69 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-          child: Row(
-            children: [
-              SideNav(
-                activeKey: _activeKey,
-                onItemTap: (key) {
-                  // If it's a page we handle in the shell, just switch state
-                  if (['home', 'product_list', 'add_products', 'orders', 'customers'].contains(key)) {
-                    setState(() => _activeKey = key);
-                  } else {
-                    // Handle logout or other external navigation if any
-                    if (key == 'logout') {
-                      Navigator.of(context).pushReplacementNamed('/login');
-                    }
-                  }
-                },
-              ),
-              AppSpacing.h25,
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: KeyedSubtree(
-                    key: ValueKey(_activeKey),
-                    child: _buildBody(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isMobile = constraints.maxWidth < 800;
+        final double horizontalPadding = isMobile ? 16.w : 24.w;
+
+        final sideNav = SideNav(
+          activeKey: _activeKey,
+          onItemTap: (key) {
+            if (['home', 'product_list', 'add_products', 'orders', 'customers'].contains(key)) {
+              setState(() => _activeKey = key);
+              if (isMobile && Scaffold.of(context).isDrawerOpen) {
+                Navigator.of(context).pop();
+              } else if (isMobile) {
+                // If context isn't finding scaffold drawer state easily due to builder, popping via global isn't ideal but we can just pop context.
+                Navigator.pop(context);
+              }
+            } else if (key == 'logout') {
+              Navigator.of(context).pushReplacementNamed('/login');
+            }
+          },
+        );
+
+        return Scaffold(
+          appBar: isMobile
+              ? AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  title: Text(
+                    'Dashboard',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18.sp),
                   ),
-                ),
+                )
+              : null,
+          drawer: isMobile ? Drawer(child: SafeArea(child: sideNav)) : null,
+          body: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: isMobile ? 10.h : 20.h),
+              child: Row(
+                children: [
+                  if (!isMobile) ...[
+                    sideNav,
+                    AppSpacing.h25,
+                  ],
+                  Expanded(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      switchInCurve: Curves.easeOutCubic,
+                      transitionBuilder: (child, animation) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey(_activeKey),
+                        child: _buildBody(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -25,10 +25,13 @@ class _ProductsGridState extends State<ProductsGrid> {
 
   List<ProductModel> get _filtered {
     var list = _mockProducts.where((p) {
-      final matchSearch = p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      final matchSearch =
+          p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
           p.category.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchFilter = _selectedFilter == 'All' || p.status == _selectedFilter;
-      final matchCategory = _activeCategory == null || p.category == _activeCategory!.label;
+      final matchFilter =
+          _selectedFilter == 'All' || p.status == _selectedFilter;
+      final matchCategory =
+          _activeCategory == null || p.category == _activeCategory!.label;
       return matchSearch && matchFilter && matchCategory;
     }).toList();
 
@@ -50,17 +53,29 @@ class _ProductsGridState extends State<ProductsGrid> {
         SizedBox(height: 20.h),
         products.isEmpty
             ? _buildEmpty()
-            : GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-                  childAspectRatio: 0.72,
-                ),
-                itemCount: products.length,
-                itemBuilder: (_, i) => ProductCard(product: products[i]),
+            : LayoutBuilder(
+                builder: (context, constraints) {
+                  int crossAxisCount = 4;
+                  if (constraints.maxWidth < 600) {
+                    crossAxisCount = 1;
+                  } else if (constraints.maxWidth < 900) {
+                    crossAxisCount = 2;
+                  } else if (constraints.maxWidth < 1200) {
+                    crossAxisCount = 3;
+                  }
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
+                      mainAxisExtent: 300.h,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (_, i) => ProductCard(product: products[i]),
+                  );
+                },
               ),
       ],
     );
@@ -72,7 +87,11 @@ class _ProductsGridState extends State<ProductsGrid> {
       children: [
         Text(
           'Filter by Category',
-          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
         ),
         SizedBox(height: 12.h),
         SingleChildScrollView(
@@ -80,11 +99,23 @@ class _ProductsGridState extends State<ProductsGrid> {
           physics: const BouncingScrollPhysics(),
           child: Row(
             children: [
-              _buildCategoryChip('All Products', Icons.grid_view_rounded, _activeCategory == null, () => setState(() => _activeCategory = null)),
-              ...CategoryConfig.all.map((cfg) => Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: _buildCategoryChip(cfg.label, cfg.icon, _activeCategory?.id == cfg.id, () => setState(() => _activeCategory = cfg)),
-                  )),
+              _buildCategoryChip(
+                'All Products',
+                Icons.grid_view_rounded,
+                _activeCategory == null,
+                () => setState(() => _activeCategory = null),
+              ),
+              ...CategoryConfig.all.map(
+                (cfg) => Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: _buildCategoryChip(
+                    cfg.label,
+                    cfg.icon,
+                    _activeCategory?.id == cfg.id,
+                    () => setState(() => _activeCategory = cfg),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -92,7 +123,12 @@ class _ProductsGridState extends State<ProductsGrid> {
     );
   }
 
-  Widget _buildCategoryChip(String label, IconData icon, bool isSelected, VoidCallback onTap) {
+  Widget _buildCategoryChip(
+    String label,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -101,13 +137,29 @@ class _ProductsGridState extends State<ProductsGrid> {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.card,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: isSelected ? AppColors.primary : Colors.black.withValues(alpha: 0.06), width: 1.2),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.primary
+                : Colors.black.withValues(alpha: 0.06),
+            width: 1.2,
+          ),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 16.sp, color: isSelected ? Colors.white : AppColors.primary),
+            Icon(
+              icon,
+              size: 16.sp,
+              color: isSelected ? Colors.white : AppColors.primary,
+            ),
             SizedBox(width: 8.w),
-            Text(label, style: TextStyle(fontSize: 12.sp, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600, color: isSelected ? Colors.white : AppColors.textPrimary)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                color: isSelected ? Colors.white : AppColors.textPrimary,
+              ),
+            ),
           ],
         ),
       ),
@@ -115,27 +167,53 @@ class _ProductsGridState extends State<ProductsGrid> {
   }
 
   Widget _buildToolbar() {
-    return Row(
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Expanded(
-          child: Container(
-            height: 44.h,
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
-            decoration: BoxDecoration(color: AppColors.card, borderRadius: BorderRadius.circular(12.r), border: Border.all(color: Colors.black.withValues(alpha: 0.06))),
-            child: Row(
-              children: [
-                Icon(Icons.search_rounded, size: 18.sp, color: AppColors.textSecondary.withValues(alpha: 0.5)),
-                SizedBox(width: 10.w),
-                Expanded(child: TextField(onChanged: (v) => setState(() => _searchQuery = v), style: TextStyle(fontSize: 13.sp), decoration: const InputDecoration(hintText: 'Search products...', border: InputBorder.none))),
-              ],
-            ),
+        Container(
+          width: 300.w,
+          height: 50.h,
+          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.search_rounded,
+                size: 18.sp,
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: TextField(
+                  onChanged: (v) => setState(() => _searchQuery = v),
+                  style: TextStyle(fontSize: 13.sp),
+                  decoration: const InputDecoration(
+                    hintText: 'Search products...',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(width: 12.w),
-        GridFilterDropdown(value: _selectedFilter, items: _filters, icon: Icons.filter_list_rounded, onChanged: (v) => setState(() => _selectedFilter = v)),
-        SizedBox(width: 10.w),
-        GridFilterDropdown(value: _sortBy, items: _sorts, icon: Icons.sort_rounded, onChanged: (v) => setState(() => _sortBy = v)),
-        SizedBox(width: 10.w),
+        GridFilterDropdown(
+          value: _selectedFilter,
+          items: _filters,
+          icon: Icons.filter_list_rounded,
+          onChanged: (v) => setState(() => _selectedFilter = v),
+        ),
+        GridFilterDropdown(
+          value: _sortBy,
+          items: _sorts,
+          icon: Icons.sort_rounded,
+          onChanged: (v) => setState(() => _sortBy = v),
+        ),
         _buildCountBadge(),
       ],
     );
@@ -144,8 +222,18 @@ class _ProductsGridState extends State<ProductsGrid> {
   Widget _buildCountBadge() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-      decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10.r)),
-      child: Text('${_filtered.length} products', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: AppColors.primary)),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Text(
+        '${_filtered.length} products',
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.primary,
+        ),
+      ),
     );
   }
 
@@ -155,9 +243,16 @@ class _ProductsGridState extends State<ProductsGrid> {
         padding: EdgeInsets.symmetric(vertical: 60.h),
         child: Column(
           children: [
-            Icon(Icons.inventory_2_outlined, size: 48.sp, color: AppColors.textSecondary.withValues(alpha: 0.3)),
+            Icon(
+              Icons.inventory_2_outlined,
+              size: 48.sp,
+              color: AppColors.textSecondary.withValues(alpha: 0.3),
+            ),
             SizedBox(height: 12.h),
-            const Text('No products found', style: TextStyle(color: AppColors.textSecondary)),
+            const Text(
+              'No products found',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ],
         ),
       ),
@@ -165,13 +260,87 @@ class _ProductsGridState extends State<ProductsGrid> {
   }
 
   static final _mockProducts = <ProductModel>[
-    ProductModel(id: 'PRD-001', name: 'iPhone 15 Pro Max', category: 'Smartphones', brand: 'Apple', price: 1299.00, originalPrice: 1399.00, stock: 48, status: 'In Stock', color: const Color(0xFF1C1C1E)),
-    ProductModel(id: 'PRD-002', name: 'Samsung Galaxy S24 Ultra', category: 'Smartphones', brand: 'Samsung', price: 1199.00, stock: 23, status: 'In Stock', color: const Color(0xFF1A237E)),
-    ProductModel(id: 'PRD-003', name: 'MacBook Pro 14" M3', category: 'Laptops', brand: 'Apple', price: 1999.00, stock: 11, status: 'Low Stock', color: const Color(0xFF607D8B)),
-    ProductModel(id: 'PRD-004', name: 'Nike Air Max 270', category: 'Sports & Fitness', brand: 'Nike', price: 149.00, originalPrice: 189.00, stock: 86, status: 'In Stock', color: const Color(0xFFE53935)),
-    ProductModel(id: 'PRD-005', name: 'iPad Pro 12.9" M4', category: 'Tablets', brand: 'Apple', price: 1099.00, stock: 5, status: 'Low Stock', color: const Color(0xFF37474F)),
-    ProductModel(id: 'PRD-006', name: 'Sony WH-1000XM5', category: 'Electronics', brand: 'Sony', price: 349.00, stock: 0, status: 'Out of Stock', color: const Color(0xFF263238)),
-    ProductModel(id: 'PRD-007', name: 'Zara Linen Blazer', category: "Women's Fashion", brand: 'Zara', price: 89.00, stock: 34, status: 'In Stock', color: const Color(0xFF8D6E63)),
-    ProductModel(id: 'PRD-008', name: 'Dell XPS 15 i9', category: 'Laptops', brand: 'Dell', price: 2499.00, stock: 7, status: 'Low Stock', color: const Color(0xFF546E7A)),
+    ProductModel(
+      id: 'PRD-001',
+      name: 'iPhone 15 Pro Max',
+      category: 'Smartphones',
+      brand: 'Apple',
+      price: 1299.00,
+      originalPrice: 1399.00,
+      stock: 48,
+      status: 'In Stock',
+      color: const Color(0xFF1C1C1E),
+    ),
+    ProductModel(
+      id: 'PRD-002',
+      name: 'Samsung Galaxy S24 Ultra',
+      category: 'Smartphones',
+      brand: 'Samsung',
+      price: 1199.00,
+      stock: 23,
+      status: 'In Stock',
+      color: const Color(0xFF1A237E),
+    ),
+    ProductModel(
+      id: 'PRD-003',
+      name: 'MacBook Pro 14" M3',
+      category: 'Laptops',
+      brand: 'Apple',
+      price: 1999.00,
+      stock: 11,
+      status: 'Low Stock',
+      color: const Color(0xFF607D8B),
+    ),
+    ProductModel(
+      id: 'PRD-004',
+      name: 'Nike Air Max 270',
+      category: 'Sports & Fitness',
+      brand: 'Nike',
+      price: 149.00,
+      originalPrice: 189.00,
+      stock: 86,
+      status: 'In Stock',
+      color: const Color(0xFFE53935),
+    ),
+    ProductModel(
+      id: 'PRD-005',
+      name: 'iPad Pro 12.9" M4',
+      category: 'Tablets',
+      brand: 'Apple',
+      price: 1099.00,
+      stock: 5,
+      status: 'Low Stock',
+      color: const Color(0xFF37474F),
+    ),
+    ProductModel(
+      id: 'PRD-006',
+      name: 'Sony WH-1000XM5',
+      category: 'Electronics',
+      brand: 'Sony',
+      price: 349.00,
+      stock: 0,
+      status: 'Out of Stock',
+      color: const Color(0xFF263238),
+    ),
+    ProductModel(
+      id: 'PRD-007',
+      name: 'Zara Linen Blazer',
+      category: "Women's Fashion",
+      brand: 'Zara',
+      price: 89.00,
+      stock: 34,
+      status: 'In Stock',
+      color: const Color(0xFF8D6E63),
+    ),
+    ProductModel(
+      id: 'PRD-008',
+      name: 'Dell XPS 15 i9',
+      category: 'Laptops',
+      brand: 'Dell',
+      price: 2499.00,
+      stock: 7,
+      status: 'Low Stock',
+      color: const Color(0xFF546E7A),
+    ),
   ];
 }

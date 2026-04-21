@@ -9,28 +9,27 @@ class AddProductActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 30.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: Icon(Icons.rocket_launch_rounded, size: 15.sp),
-            label: Text(
-              'Publish Product',
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              elevation: 4,
-              shadowColor: AppColors.primary.withValues(alpha: 0.3),
-              padding: EdgeInsets.symmetric(horizontal: 200.w, vertical: 30.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
-              ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 60.h,
+        child: ElevatedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.rocket_launch_rounded, size: 18.sp),
+          label: Text(
+            'Publish Product',
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            elevation: 4,
+            shadowColor: AppColors.primary.withValues(alpha: 0.3),
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

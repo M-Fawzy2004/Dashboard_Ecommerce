@@ -67,13 +67,13 @@ class _ShippingInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60.h,
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: TextField(
@@ -85,16 +85,15 @@ class _ShippingInput extends StatelessWidget {
                 hintText: hint,
                 hintStyle: const TextStyle(color: Colors.black26),
                 border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 14.w),
+                contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
               ),
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Text(
               suffix,
-              style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: AppColors.textSecondary.withValues(alpha: 0.4)),
             ),
           ),
         ],

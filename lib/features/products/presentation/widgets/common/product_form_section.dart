@@ -59,7 +59,7 @@ class ProductFormSection extends StatelessWidget {
                   ),
                 ),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
             ],
           ),
           SizedBox(height: 20.h),

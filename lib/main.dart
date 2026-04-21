@@ -31,28 +31,53 @@ class DashboardApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit()..checkAuth(),
-      child: ScreenUtilInit(
-        designSize: const Size(1440, 1024),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'app_title'.tr(),
-            locale: context.locale,
-            supportedLocales: context.supportedLocales,
-            localizationsDelegates: context.localizationDelegates,
-            theme: AppTheme.light,
-            initialRoute: '/login',
-            routes: {
-              '/login': (_) => const LoginPage(),
-              '/dashboard': (_) => const DashboardPage(),
-              '/categories': (_) => const CategoriesPage(),
-              '/orders': (_) => const OrdersPage(),
-              '/products': (_) => const ProductsPage(),
-              '/add-products': (_) => const AddProductPage(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 600;
+          final isTablet = constraints.maxWidth >= 600 && constraints.maxWidth < 1100;
+          
+          Size designSize = const Size(1440, 1024);
+          if (isMobile) {
+            designSize = const Size(430, 932);
+          } else if (isTablet) {
+            designSize = const Size(1100, 800); // Prevents text from sizing UP on 1000px widths
+          }
+
+          return ScreenUtilInit(
+            key: ValueKey(designSize),
+            designSize: designSize,
+            minTextAdapt: true,
+            splitScreenMode: true,
+            builder: (context, child) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'app_title'.tr(),
+                locale: context.locale,
+                supportedLocales: context.supportedLocales,
+                localizationsDelegates: context.localizationDelegates,
+                theme: AppTheme.light,
+                routes: {
+                  '/login': (_) => const LoginPage(),
+                  '/dashboard': (_) => const DashboardPage(),
+                  '/categories': (_) => const CategoriesPage(),
+                  '/orders': (_) => const OrdersPage(),
+                  '/products': (_) => const ProductsPage(),
+                  '/add-products': (_) => const AddProductPage(),
+                },
+                home: BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthAuthenticated) {
+                      return const DashboardPage();
+                    } else if (state is AuthUnauthenticated || state is AuthError) {
+                      return const LoginPage();
+                    }
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                ),
+              );
             },
-            home: child,
           );
         },
       ),

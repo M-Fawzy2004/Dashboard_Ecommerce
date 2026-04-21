@@ -7,10 +7,12 @@ class KpiGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: EnhancedKpiCard(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 800;
+        
+        final cards = [
+          EnhancedKpiCard(
             title: 'Total Sales',
             subtitle: 'Last 7 days',
             value: r'$350K',
@@ -19,10 +21,7 @@ class KpiGrid extends StatelessWidget {
             previousValue: r'Previous 7 days ($235K)',
             onDetailsPressed: () {},
           ),
-        ),
-        AppSpacing.h25,
-        Expanded(
-          child: EnhancedKpiCard(
+          EnhancedKpiCard(
             title: 'Total Orders',
             subtitle: 'Last 7 days',
             value: '10.7K',
@@ -31,10 +30,7 @@ class KpiGrid extends StatelessWidget {
             previousValue: r'Previous 7 days (7.6k)',
             onDetailsPressed: () {},
           ),
-        ),
-        AppSpacing.h25,
-        Expanded(
-          child: EnhancedKpiCard(
+          EnhancedKpiCard(
             title: 'Inventory Status',
             subtitle: 'Real-time',
             isMultiValue: true,
@@ -44,8 +40,30 @@ class KpiGrid extends StatelessWidget {
             ],
             onDetailsPressed: () {},
           ),
-        ),
-      ],
+        ];
+
+        if (isMobile) {
+          return Column(
+            children: [
+              cards[0],
+              AppSpacing.v16,
+              cards[1],
+              AppSpacing.v16,
+              cards[2],
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(child: cards[0]),
+            AppSpacing.h25,
+            Expanded(child: cards[1]),
+            AppSpacing.h25,
+            Expanded(child: cards[2]),
+          ],
+        );
+      },
     );
   }
 }

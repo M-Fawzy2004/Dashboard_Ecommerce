@@ -7,9 +7,9 @@ class AddProductTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final titleBlock = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -27,10 +27,30 @@ class AddProductTopBar extends StatelessWidget {
               style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
             ),
           ],
-        ),
-        const Spacer(),
-        _PublishButton(),
-      ],
+        );
+
+        if (constraints.maxWidth < 600) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              titleBlock,
+              SizedBox(height: 16.h),
+              SizedBox(
+                width: double.infinity,
+                child: _PublishButton(),
+              ),
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            titleBlock,
+            const Spacer(),
+            _PublishButton(),
+          ],
+        );
+      },
     );
   }
 }
