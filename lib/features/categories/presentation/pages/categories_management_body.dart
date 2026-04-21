@@ -159,8 +159,11 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
   Widget _buildGrid() {
     return LayoutBuilder(builder: (context, constraints) {
       int crossAxisCount = 4;
-      if (constraints.maxWidth < 500) crossAxisCount = 2;
-      else if (constraints.maxWidth < 800) crossAxisCount = 3;
+      if (constraints.maxWidth < 500) {
+        crossAxisCount = 2;
+      } else if (constraints.maxWidth < 800) {
+        crossAxisCount = 3;
+      }
 
       return GridView.builder(
         shrinkWrap: true,
