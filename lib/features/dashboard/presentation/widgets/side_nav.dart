@@ -29,6 +29,7 @@ class _SideNavState extends State<SideNav> {
       curve: Curves.easeInOutCubic,
       width: _isCollapsed ? 80.w : 260.w,
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: AppColors.card,
         border: Border(right: BorderSide(color: AppColors.divider)),
@@ -43,23 +44,30 @@ class _SideNavState extends State<SideNav> {
               mainAxisAlignment: _isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
               children: [
                 if (!_isCollapsed)
-                  Row(
-                    children: [
-                      Container(
-                        width: 32.w,
-                        height: 32.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(8.r),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 32.w,
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: const Icon(Icons.dashboard, color: Colors.white, size: 20),
                         ),
-                        child: const Icon(Icons.dashboard, color: Colors.white, size: 20),
-                      ),
-                      SizedBox(width: 12.w),
-                      const Text(
-                        'Dashboard',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-                      ),
-                    ],
+                        SizedBox(width: 12.w),
+                        const Flexible(
+                          child: Text(
+                            'Dashboard',
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 IconButton(
                   icon: Icon(_isCollapsed ? Icons.menu_open_rounded : Icons.menu_rounded),
@@ -234,6 +242,9 @@ class _SideNavTile extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.label,
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.fade,
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: active ? FontWeight.w800 : FontWeight.w500,

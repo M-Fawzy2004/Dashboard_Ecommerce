@@ -241,7 +241,14 @@ class _LoginPageState extends State<LoginPage> {
                                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
                                             ),
                                             child: isLoading
-                                                ? SizedBox(width: 24.w, height: 24.w, child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                                                ? Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      SizedBox(width: 20.w, height: 20.w, child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5)),
+                                                      SizedBox(width: 12.w),
+                                                      Text('Logging in...', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                                                    ],
+                                                  )
                                                 : Text('Login to Dashboard', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800)),
                                           ),
                                         );

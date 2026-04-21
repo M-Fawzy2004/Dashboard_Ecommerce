@@ -70,7 +70,7 @@ class _ProductsGridState extends State<ProductsGrid> {
                       crossAxisCount: crossAxisCount,
                       crossAxisSpacing: 16.w,
                       mainAxisSpacing: 16.h,
-                      mainAxisExtent: 300.h,
+                      mainAxisExtent: 400.h,
                     ),
                     itemCount: products.length,
                     itemBuilder: (_, i) => ProductCard(product: products[i]),
