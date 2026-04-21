@@ -10,12 +10,13 @@ import 'features/dashboard/presentation/pages/dashboard_page.dart';
 import 'features/orders/presentation/pages/orders_page.dart';
 import 'features/products/presentation/pages/add_product_page.dart';
 import 'features/products/presentation/pages/products_page.dart';
+import 'features/products/presentation/cubit/products_cubit.dart';
 import 'shared/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  
+
   // Initialize Supabase configuration
   await SupabaseConfig.init();
 
@@ -34,18 +35,25 @@ class DashboardApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit()..checkAuth(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthCubit()..checkAuth()),
+        BlocProvider(create: (context) => ProductsCubit()..loadProducts()),
+      ],
       child: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 600;
-          final isTablet = constraints.maxWidth >= 600 && constraints.maxWidth < 1100;
-          
+          final isTablet =
+              constraints.maxWidth >= 600 && constraints.maxWidth < 1100;
+
           Size designSize = const Size(1440, 1024);
           if (isMobile) {
             designSize = const Size(430, 932);
           } else if (isTablet) {
-            designSize = const Size(1100, 800); // Prevents text from sizing UP on 1000px widths
+            designSize = const Size(
+              1100,
+              800,
+            ); // Prevents text from sizing UP on 1000px widths
           }
 
           return ScreenUtilInit(
@@ -73,7 +81,8 @@ class DashboardApp extends StatelessWidget {
                   builder: (context, state) {
                     if (state is AuthAuthenticated) {
                       return const DashboardPage();
-                    } else if (state is AuthUnauthenticated || state is AuthError) {
+                    } else if (state is AuthUnauthenticated ||
+                        state is AuthError) {
                       return const LoginPage();
                     }
                     return const Scaffold(

@@ -3,7 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
 
 class AddProductActionButtons extends StatelessWidget {
-  const AddProductActionButtons({super.key});
+  const AddProductActionButtons({
+    super.key,
+    required this.onPublish,
+    this.isLoading = false,
+  });
+
+  final VoidCallback onPublish;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +20,19 @@ class AddProductActionButtons extends StatelessWidget {
         width: double.infinity,
         height: 60.h,
         child: ElevatedButton.icon(
-          onPressed: () {},
-          icon: Icon(Icons.rocket_launch_rounded, size: 18.sp),
+          onPressed: isLoading ? null : onPublish,
+          icon: isLoading
+              ? SizedBox(
+                  width: 18.w,
+                  height: 18.h,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2.2,
+                    color: Colors.white,
+                  ),
+                )
+              : Icon(Icons.rocket_launch_rounded, size: 18.sp),
           label: Text(
-            'Publish Product',
+            isLoading ? 'Publishing...' : 'Publish Product',
             style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
           ),
           style: ElevatedButton.styleFrom(

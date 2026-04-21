@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
+import '../../domain/entities/product_entity.dart';
 import 'common/product_form_section.dart';
 
 class ProductColorsCard extends StatefulWidget {
-  const ProductColorsCard({super.key});
+  const ProductColorsCard({super.key, this.onChanged});
+
+  final ValueChanged<List<ProductColorStock>>? onChanged;
 
   @override
   State<ProductColorsCard> createState() => _ProductColorsCardState();
@@ -39,6 +42,7 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
         _colorStock.putIfAbsent(name, () => _ColorStockConfig());
       }
     });
+    _notify();
   }
 
   @override
@@ -118,6 +122,7 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
                         config.unlimited = value;
                         if (value) config.qtyCtrl.text = '0';
                       });
+                      _notify();
                     },
                   ),
                 );
@@ -126,6 +131,20 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
         ],
       ),
     );
+  }
+
+  void _notify() {
+    final result = _selected.map((name) {
+      final option = _allColors.firstWhere((e) => e.name == name);
+      final config = _colorStock[name] ?? _ColorStockConfig();
+      return ProductColorStock(
+        colorName: name,
+        colorHex: '#${option.color.value.toRadixString(16).substring(2).toUpperCase()}',
+        quantity: int.tryParse(config.qtyCtrl.text) ?? 0,
+        unlimited: config.unlimited,
+      );
+    }).toList();
+    widget.onChanged?.call(result);
   }
 }
 
@@ -281,6 +300,7 @@ class _ColorStockRow extends StatelessWidget {
             ),
             child: TextField(
               controller: config.qtyCtrl,
+              onChanged: (_) => onUnlimitedChanged(config.unlimited),
               enabled: !config.unlimited,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,

@@ -4,7 +4,9 @@ import '../../../../../shared/theme/app_colors.dart';
 import 'common/product_form_section.dart';
 
 class ProductSpecsCard extends StatefulWidget {
-  const ProductSpecsCard({super.key});
+  const ProductSpecsCard({super.key, this.onChanged});
+
+  final ValueChanged<Map<String, String>>? onChanged;
 
   @override
   State<ProductSpecsCard> createState() => _ProductSpecsCardState();
@@ -17,6 +19,7 @@ class _ProductSpecsCardState extends State<ProductSpecsCard> {
     setState(() {
       _specs.add(MapEntry(TextEditingController(), TextEditingController()));
     });
+    _notify();
   }
 
   void _removeSpec(int index) {
@@ -25,6 +28,7 @@ class _ProductSpecsCardState extends State<ProductSpecsCard> {
       _specs[index].value.dispose();
       _specs.removeAt(index);
     });
+    _notify();
   }
 
   @override
@@ -67,12 +71,20 @@ class _ProductSpecsCardState extends State<ProductSpecsCard> {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: _SpecInput(controller: _specs[i].key, hint: 'Feature (e.g. RAM)'),
+                    child: _SpecInput(
+                      controller: _specs[i].key,
+                      hint: 'Feature (e.g. RAM)',
+                      onChanged: (_) => _notify(),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
                     flex: 3,
-                    child: _SpecInput(controller: _specs[i].value, hint: 'Value (e.g. 16GB)'),
+                    child: _SpecInput(
+                      controller: _specs[i].value,
+                      hint: 'Value (e.g. 16GB)',
+                      onChanged: (_) => _notify(),
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   GestureDetector(
@@ -87,12 +99,27 @@ class _ProductSpecsCardState extends State<ProductSpecsCard> {
       ),
     );
   }
+
+  void _notify() {
+    final specs = <String, String>{};
+    for (final entry in _specs) {
+      final k = entry.key.text.trim();
+      final v = entry.value.text.trim();
+      if (k.isNotEmpty) specs[k] = v;
+    }
+    widget.onChanged?.call(specs);
+  }
 }
 
 class _SpecInput extends StatelessWidget {
-  const _SpecInput({required this.controller, required this.hint});
+  const _SpecInput({
+    required this.controller,
+    required this.hint,
+    this.onChanged,
+  });
   final TextEditingController controller;
   final String hint;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +132,7 @@ class _SpecInput extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        onChanged: onChanged,
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
         decoration: InputDecoration(

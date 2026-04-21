@@ -4,7 +4,12 @@ import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 
 class ProductBasicDetailsCard extends StatefulWidget {
-  const ProductBasicDetailsCard({super.key});
+  const ProductBasicDetailsCard({
+    super.key,
+    this.onChanged,
+  });
+
+  final void Function(String name, String description)? onChanged;
 
   @override
   State<ProductBasicDetailsCard> createState() =>
@@ -31,12 +36,17 @@ class _ProductBasicDetailsCardState extends State<ProductBasicDetailsCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _Label('Product Name'),
-          _InputField(controller: _nameCtrl, hint: 'iPhone 15'),
+          _InputField(
+            controller: _nameCtrl,
+            hint: 'iPhone 15',
+            onChanged: (_) => widget.onChanged?.call(_nameCtrl.text, _descCtrl.text),
+          ),
           AppSpacing.v16,
           const _Label('Product Description'),
           _TextAreaField(
             controller: _descCtrl,
             hint: 'Describe features, specs and highlights...',
+            onChanged: (_) => widget.onChanged?.call(_nameCtrl.text, _descCtrl.text),
           ),
         ],
       ),
@@ -144,17 +154,20 @@ class _InputField extends StatelessWidget {
     required this.hint,
     // ignore: unused_element_parameter
     this.keyboardType,
+    this.onChanged,
   });
 
   final TextEditingController? controller;
   final String hint;
   final TextInputType? keyboardType;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      onChanged: onChanged,
       textAlignVertical: TextAlignVertical.center,
       style: TextStyle(fontSize: 14.sp, color: AppColors.textPrimary),
       decoration: InputDecoration(
@@ -186,10 +199,15 @@ class _InputField extends StatelessWidget {
 // ─── TextArea ────────────────────────────────────────────────────────────────
 
 class _TextAreaField extends StatelessWidget {
-  const _TextAreaField({this.controller, required this.hint});
+  const _TextAreaField({
+    this.controller,
+    required this.hint,
+    this.onChanged,
+  });
 
   final TextEditingController? controller;
   final String hint;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +215,7 @@ class _TextAreaField extends StatelessWidget {
       children: [
         TextField(
           controller: controller,
+          onChanged: onChanged,
           maxLines: 5,
           style: TextStyle(
             fontSize: 13.sp,

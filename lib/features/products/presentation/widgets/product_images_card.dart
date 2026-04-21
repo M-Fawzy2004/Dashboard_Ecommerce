@@ -6,7 +6,9 @@ import 'product_images/product_image_models.dart';
 import 'product_images/product_image_widgets.dart';
 
 class ProductImagesCard extends StatefulWidget {
-  const ProductImagesCard({super.key});
+  const ProductImagesCard({super.key, this.onChanged});
+
+  final ValueChanged<List<ProductImageItem>>? onChanged;
 
   @override
   State<ProductImagesCard> createState() => _ProductImagesCardState();
@@ -21,12 +23,14 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
     final ProductImageItem? selected = await _selectImageSource();
     if (!mounted || selected == null) return;
     setState(() => _mainImage = selected);
+    _notify();
   }
 
   Future<void> _replaceMainImage() async {
     final ProductImageItem? selected = await _selectImageSource();
     if (!mounted || selected == null) return;
     setState(() => _mainImage = selected);
+    _notify();
   }
 
   Future<void> _addThumbImage() async {
@@ -34,9 +38,13 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
     final ProductImageItem? selected = await _selectImageSource();
     if (!mounted || selected == null) return;
     setState(() => _thumbImages.add(selected));
+    _notify();
   }
 
-  void _removeThumb(int index) => setState(() => _thumbImages.removeAt(index));
+  void _removeThumb(int index) {
+    setState(() => _thumbImages.removeAt(index));
+    _notify();
+  }
 
   Future<ProductImageItem?> _selectImageSource() async {
     final PickSource? source = await showModalBottomSheet<PickSource>(
@@ -198,6 +206,14 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
       ),
     );
     return decision ?? false;
+  }
+
+  void _notify() {
+    final images = <ProductImageItem>[
+      if (_mainImage != null) _mainImage!,
+      ..._thumbImages,
+    ];
+    widget.onChanged?.call(images);
   }
 
   @override

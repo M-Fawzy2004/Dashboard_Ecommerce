@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
-
+import '../../domain/entities/product_entity.dart';
+import '../cubit/products_cubit.dart';
 import '../model/category_config.dart';
 import '../model/product_model.dart';
-import 'product_card.dart';
 import 'grid_filter_dropdown.dart';
+import 'product_card.dart';
 
 class ProductsGrid extends StatefulWidget {
   const ProductsGrid({super.key});
@@ -23,13 +25,12 @@ class _ProductsGridState extends State<ProductsGrid> {
   static const _filters = ['All', 'In Stock', 'Low Stock', 'Out of Stock'];
   static const _sorts = ['Newest', 'Price ↑', 'Price ↓', 'Stock ↑'];
 
-  List<ProductModel> get _filtered {
-    var list = _mockProducts.where((p) {
+  List<ProductModel> _filtered(List<ProductModel> source) {
+    var list = source.where((p) {
       final matchSearch =
           p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchFilter =
-          _selectedFilter == 'All' || p.status == _selectedFilter;
+              p.category.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchFilter = _selectedFilter == 'All' || p.status == _selectedFilter;
       final matchCategory =
           _activeCategory == null || p.category == _activeCategory!.label;
       return matchSearch && matchFilter && matchCategory;
@@ -43,17 +44,25 @@ class _ProductsGridState extends State<ProductsGrid> {
 
   @override
   Widget build(BuildContext context) {
-    final products = _filtered;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildCategoryFilter(),
-        SizedBox(height: 20.h),
-        _buildToolbar(),
-        SizedBox(height: 20.h),
-        products.isEmpty
-            ? _buildEmpty()
-            : LayoutBuilder(
+    return BlocBuilder<ProductsCubit, ProductsState>(
+      builder: (context, state) {
+        final source = state.items.isNotEmpty
+            ? state.items.map(_toUiModel).toList()
+            : _mockProducts;
+        final products = _filtered(source);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCategoryFilter(),
+            SizedBox(height: 20.h),
+            _buildToolbar(products.length),
+            SizedBox(height: 20.h),
+            if (state.status == ProductsStatus.loading)
+              const Center(child: CircularProgressIndicator())
+            else if (products.isEmpty)
+              _buildEmpty()
+            else
+              LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 4;
                   if (constraints.maxWidth < 600) {
@@ -73,11 +82,39 @@ class _ProductsGridState extends State<ProductsGrid> {
                       mainAxisExtent: 400.h,
                     ),
                     itemCount: products.length,
-                    itemBuilder: (_, i) => ProductCard(product: products[i]),
+                    itemBuilder: (_, i) => ProductCard(
+                      product: products[i],
+                      onDelete: () => context
+                          .read<ProductsCubit>()
+                          .deleteProduct(products[i].id),
+                    ),
                   );
                 },
               ),
-      ],
+          ],
+        );
+      },
+    );
+  }
+
+  ProductModel _toUiModel(ProductEntity entity) {
+    final price = entity.price ?? 0;
+    final status = entity.stockStatus ??
+        ((entity.unlimitedStock || (entity.stockQty ?? 0) > 20)
+            ? 'In Stock'
+            : (entity.stockQty ?? 0) > 0
+                ? 'Low Stock'
+                : 'Out of Stock');
+    return ProductModel(
+      id: entity.id,
+      name: entity.name,
+      category: entity.categoryName ?? 'General',
+      brand: entity.sku ?? 'N/A',
+      price: price,
+      originalPrice: entity.salePrice != null ? entity.salePrice : null,
+      stock: entity.unlimitedStock ? 999999 : (entity.stockQty ?? 0),
+      status: status,
+      color: const Color(0xFF1C1C1E),
     );
   }
 
@@ -166,7 +203,7 @@ class _ProductsGridState extends State<ProductsGrid> {
     );
   }
 
-  Widget _buildToolbar() {
+  Widget _buildToolbar(int count) {
     return Wrap(
       spacing: 12.w,
       runSpacing: 12.h,
@@ -214,12 +251,12 @@ class _ProductsGridState extends State<ProductsGrid> {
           icon: Icons.sort_rounded,
           onChanged: (v) => setState(() => _sortBy = v),
         ),
-        _buildCountBadge(),
+        _buildCountBadge(count),
       ],
     );
   }
 
-  Widget _buildCountBadge() {
+  Widget _buildCountBadge(int count) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
@@ -227,7 +264,7 @@ class _ProductsGridState extends State<ProductsGrid> {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Text(
-        '${_filtered.length} products',
+        '$count products',
         style: TextStyle(
           fontSize: 12.sp,
           fontWeight: FontWeight.w700,
@@ -270,77 +307,6 @@ class _ProductsGridState extends State<ProductsGrid> {
       stock: 48,
       status: 'In Stock',
       color: const Color(0xFF1C1C1E),
-    ),
-    ProductModel(
-      id: 'PRD-002',
-      name: 'Samsung Galaxy S24 Ultra',
-      category: 'Smartphones',
-      brand: 'Samsung',
-      price: 1199.00,
-      stock: 23,
-      status: 'In Stock',
-      color: const Color(0xFF1A237E),
-    ),
-    ProductModel(
-      id: 'PRD-003',
-      name: 'MacBook Pro 14" M3',
-      category: 'Laptops',
-      brand: 'Apple',
-      price: 1999.00,
-      stock: 11,
-      status: 'Low Stock',
-      color: const Color(0xFF607D8B),
-    ),
-    ProductModel(
-      id: 'PRD-004',
-      name: 'Nike Air Max 270',
-      category: 'Sports & Fitness',
-      brand: 'Nike',
-      price: 149.00,
-      originalPrice: 189.00,
-      stock: 86,
-      status: 'In Stock',
-      color: const Color(0xFFE53935),
-    ),
-    ProductModel(
-      id: 'PRD-005',
-      name: 'iPad Pro 12.9" M4',
-      category: 'Tablets',
-      brand: 'Apple',
-      price: 1099.00,
-      stock: 5,
-      status: 'Low Stock',
-      color: const Color(0xFF37474F),
-    ),
-    ProductModel(
-      id: 'PRD-006',
-      name: 'Sony WH-1000XM5',
-      category: 'Electronics',
-      brand: 'Sony',
-      price: 349.00,
-      stock: 0,
-      status: 'Out of Stock',
-      color: const Color(0xFF263238),
-    ),
-    ProductModel(
-      id: 'PRD-007',
-      name: 'Zara Linen Blazer',
-      category: "Women's Fashion",
-      brand: 'Zara',
-      price: 89.00,
-      stock: 34,
-      status: 'In Stock',
-      color: const Color(0xFF8D6E63),
-    ),
-    ProductModel(
-      id: 'PRD-008',
-      name: 'Dell XPS 15 i9',
-      category: 'Laptops',
-      brand: 'Dell',
-      price: 2499.00,
-      stock: 7,
-      status: 'Low Stock',
-      color: const Color(0xFF546E7A),
     ),
   ];
 }

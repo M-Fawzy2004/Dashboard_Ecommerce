@@ -5,7 +5,13 @@ import '../../../../../shared/theme/app_spacing.dart';
 import '../common/product_form_section.dart';
 
 class ProductPricingCard extends StatefulWidget {
-  const ProductPricingCard({super.key});
+  const ProductPricingCard({super.key, this.onChanged});
+
+  final void Function({
+    required double? price,
+    required double? salePrice,
+    required String currency,
+  })? onChanged;
 
   @override
   State<ProductPricingCard> createState() => _ProductPricingCardState();
@@ -76,7 +82,10 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
                           controller: _priceCtrl,
                           currency: _selectedCurrency,
                           onCurrencyTap: _showCurrencyPicker,
-                          onChanged: (_) => setState(() {}),
+                          onChanged: (_) {
+                            setState(() {});
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -90,7 +99,10 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
                           currency: _selectedCurrency,
                           hint: 'E.g. 899',
                           isSale: true,
-                          onChanged: (_) => setState(() {}),
+                          onChanged: (_) {
+                            setState(() {});
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -109,7 +121,10 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
                           controller: _priceCtrl,
                           currency: _selectedCurrency,
                           onCurrencyTap: _showCurrencyPicker,
-                          onChanged: (_) => setState(() {}),
+                          onChanged: (_) {
+                            setState(() {});
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -125,7 +140,10 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
                           currency: _selectedCurrency,
                           hint: 'E.g. 899',
                           isSale: true,
-                          onChanged: (_) => setState(() {}),
+                          onChanged: (_) {
+                            setState(() {});
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -165,12 +183,21 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
                   trailing: _selectedCurrency == c ? Icon(Icons.check_circle, color: AppColors.primary) : null,
                   onTap: () {
                     setState(() => _selectedCurrency = c);
+                    _notify();
                     Navigator.pop(context);
                   },
                 )),
           ],
         ),
       ),
+    );
+  }
+
+  void _notify() {
+    widget.onChanged?.call(
+      price: double.tryParse(_priceCtrl.text),
+      salePrice: double.tryParse(_salePriceCtrl.text),
+      currency: _selectedCurrency['code'] ?? 'USD',
     );
   }
 }

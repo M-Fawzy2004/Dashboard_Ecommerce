@@ -4,8 +4,15 @@ import '../../../../../shared/theme/app_colors.dart';
 import '../model/product_model.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.onEdit,
+    this.onDelete,
+  });
   final ProductModel product;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   Color get _statusColor {
     switch (product.status) {
@@ -131,7 +138,10 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  const _CardActionRow(),
+                  _CardActionRow(
+                    onEdit: onEdit,
+                    onDelete: onDelete,
+                  ),
                 ],
               ),
             ),
@@ -221,39 +231,49 @@ class _StockIndicator extends StatelessWidget {
 }
 
 class _CardActionRow extends StatelessWidget {
-  const _CardActionRow();
+  const _CardActionRow({this.onEdit, this.onDelete});
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            height: 30.h,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Center(
-              child: Text(
-                'Edit',
-                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: AppColors.primary),
+          child: InkWell(
+            onTap: onEdit,
+            borderRadius: BorderRadius.circular(8.r),
+            child: Container(
+              height: 30.h,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Center(
+                child: Text(
+                  'Edit',
+                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: AppColors.primary),
+                ),
               ),
             ),
           ),
         ),
         SizedBox(width: 8.w),
-        Container(
-          width: 30.w,
-          height: 30.h,
-          decoration: BoxDecoration(
-            color: AppColors.error.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(
-            Icons.delete_outline_rounded,
-            size: 14.sp,
-            color: AppColors.error.withValues(alpha: 0.8),
+        InkWell(
+          onTap: onDelete,
+          borderRadius: BorderRadius.circular(8.r),
+          child: Container(
+            width: 30.w,
+            height: 30.h,
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.07),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              Icons.delete_outline_rounded,
+              size: 14.sp,
+              color: AppColors.error.withValues(alpha: 0.8),
+            ),
           ),
         ),
       ],

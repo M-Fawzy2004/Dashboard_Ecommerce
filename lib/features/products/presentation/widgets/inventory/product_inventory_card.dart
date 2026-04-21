@@ -5,7 +5,15 @@ import '../../../../../shared/theme/app_spacing.dart';
 import '../common/product_form_section.dart';
 
 class ProductInventoryCard extends StatefulWidget {
-  const ProductInventoryCard({super.key});
+  const ProductInventoryCard({super.key, this.onChanged});
+
+  final void Function({
+    required int? stockQty,
+    required bool unlimitedStock,
+    required String stockStatus,
+    required String? sku,
+    required bool isFeatured,
+  })? onChanged;
 
   @override
   State<ProductInventoryCard> createState() => _ProductInventoryCardState();
@@ -52,7 +60,10 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
                         _StockInput(
                           controller: _stockCtrl,
                           unlimited: _unlimitedStock,
-                          onToggle: (v) => setState(() => _unlimitedStock = v),
+                          onToggle: (v) {
+                            setState(() => _unlimitedStock = v);
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -64,7 +75,10 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
                         _StatusSelector(
                           currentStatus: _stockStatus,
                           options: _statusOptions,
-                          onChanged: (v) => setState(() => _stockStatus = v),
+                          onChanged: (v) {
+                            setState(() => _stockStatus = v);
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -82,7 +96,10 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
                         _StockInput(
                           controller: _stockCtrl,
                           unlimited: _unlimitedStock,
-                          onToggle: (v) => setState(() => _unlimitedStock = v),
+                          onToggle: (v) {
+                            setState(() => _unlimitedStock = v);
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -96,7 +113,10 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
                         _StatusSelector(
                           currentStatus: _stockStatus,
                           options: _statusOptions,
-                          onChanged: (v) => setState(() => _stockStatus = v),
+                          onChanged: (v) {
+                            setState(() => _stockStatus = v);
+                            _notify();
+                          },
                         ),
                       ],
                     ),
@@ -113,7 +133,11 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const ProductFormLabel('SKU / Serial', isOptional: true),
-                    _SimpleInput(controller: _skuCtrl, hint: 'E.g. IPH-15-PRO-BLK'),
+                    _SimpleInput(
+                      controller: _skuCtrl,
+                      hint: 'E.g. IPH-15-PRO-BLK',
+                      onChanged: (_) => _notify(),
+                    ),
                   ],
                 ),
               ),
@@ -124,10 +148,23 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
           AppSpacing.v20,
           _FeatureToggle(
             value: _isFeatured,
-            onChanged: (v) => setState(() => _isFeatured = v),
+            onChanged: (v) {
+              setState(() => _isFeatured = v);
+              _notify();
+            },
           ),
         ],
       ),
+    );
+  }
+
+  void _notify() {
+    widget.onChanged?.call(
+      stockQty: int.tryParse(_stockCtrl.text),
+      unlimitedStock: _unlimitedStock,
+      stockStatus: _stockStatus,
+      sku: _skuCtrl.text.trim().isEmpty ? null : _skuCtrl.text.trim(),
+      isFeatured: _isFeatured,
     );
   }
 }
@@ -232,9 +269,14 @@ class _StatusSelector extends StatelessWidget {
 }
 
 class _SimpleInput extends StatelessWidget {
-  const _SimpleInput({required this.controller, required this.hint});
+  const _SimpleInput({
+    required this.controller,
+    required this.hint,
+    this.onChanged,
+  });
   final TextEditingController controller;
   final String hint;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -246,6 +288,7 @@ class _SimpleInput extends StatelessWidget {
       ),
       child: TextField(
         controller: controller,
+        onChanged: onChanged,
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
