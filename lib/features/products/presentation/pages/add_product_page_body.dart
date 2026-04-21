@@ -1,3 +1,4 @@
+import 'package:dashboard_ecommerce/features/products/presentation/widgets/product_images_card.dart';
 import 'package:flutter/material.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 import '../widgets/add_product_top_bar.dart';
@@ -8,6 +9,7 @@ import '../widgets/pricing/product_pricing_card.dart';
 import '../widgets/inventory/product_inventory_card.dart';
 import '../widgets/product_shipping_card.dart';
 import '../widgets/product_specs_card.dart';
+import '../widgets/product_colors_card.dart';
 import '../widgets/add_product_action_buttons.dart';
 
 class AddProductPageBody extends StatefulWidget {
@@ -35,6 +37,10 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
           ),
           AppSpacing.v16,
           const ProductBasicDetailsCard(),
+          AppSpacing.v16,
+          const ProductImagesCard(),
+          AppSpacing.v16,
+          const ProductColorsCard(),
           AppSpacing.v16,
           const ProductPricingCard(),
           AppSpacing.v16,
