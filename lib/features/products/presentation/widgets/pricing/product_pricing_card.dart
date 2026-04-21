@@ -5,8 +5,17 @@ import '../../../../../shared/theme/app_spacing.dart';
 import '../common/product_form_section.dart';
 
 class ProductPricingCard extends StatefulWidget {
-  const ProductPricingCard({super.key, this.onChanged});
+  const ProductPricingCard({
+    super.key,
+    this.initialPrice,
+    this.initialSalePrice,
+    this.initialCurrency,
+    this.onChanged,
+  });
 
+  final double? initialPrice;
+  final double? initialSalePrice;
+  final String? initialCurrency;
   final void Function({
     required double? price,
     required double? salePrice,
@@ -18,8 +27,8 @@ class ProductPricingCard extends StatefulWidget {
 }
 
 class _ProductPricingCardState extends State<ProductPricingCard> {
-  final _priceCtrl = TextEditingController();
-  final _salePriceCtrl = TextEditingController();
+  late final TextEditingController _priceCtrl;
+  late final TextEditingController _salePriceCtrl;
 
   static final _currencies = [
     {'code': 'USD', 'flag': '🇺🇸', 'symbol': r'$'},
@@ -28,7 +37,18 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
     {'code': 'GBP', 'flag': '🇬🇧', 'symbol': '£'},
   ];
 
-  Map<String, String> _selectedCurrency = _currencies[0];
+  late Map<String, String> _selectedCurrency;
+
+  @override
+  void initState() {
+    super.initState();
+    _priceCtrl = TextEditingController(text: widget.initialPrice?.toString());
+    _salePriceCtrl = TextEditingController(text: widget.initialSalePrice?.toString());
+    _selectedCurrency = _currencies.firstWhere(
+      (c) => c['code'] == (widget.initialCurrency ?? 'USD'),
+      orElse: () => _currencies[0],
+    );
+  }
 
   double get _discountPercent {
     final p = double.tryParse(_priceCtrl.text) ?? 0;

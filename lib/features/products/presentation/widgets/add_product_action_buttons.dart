@@ -7,10 +7,12 @@ class AddProductActionButtons extends StatelessWidget {
     super.key,
     required this.onPublish,
     this.isLoading = false,
+    this.label = 'Publish Product',
   });
 
   final VoidCallback onPublish;
   final bool isLoading;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class AddProductActionButtons extends StatelessWidget {
                 )
               : Icon(Icons.rocket_launch_rounded, size: 18.sp),
           label: Text(
-            isLoading ? 'Publishing...' : 'Publish Product',
+            isLoading ? '${label.contains('Update') ? 'Updating' : 'Publishing'}...' : label,
             style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
           ),
           style: ElevatedButton.styleFrom(

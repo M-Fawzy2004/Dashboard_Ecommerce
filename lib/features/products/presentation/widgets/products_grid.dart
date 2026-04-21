@@ -10,7 +10,8 @@ import 'grid_filter_dropdown.dart';
 import 'product_card.dart';
 
 class ProductsGrid extends StatefulWidget {
-  const ProductsGrid({super.key});
+  const ProductsGrid({super.key, this.onEdit});
+  final ValueChanged<ProductEntity>? onEdit;
 
   @override
   State<ProductsGrid> createState() => _ProductsGridState();
@@ -29,8 +30,9 @@ class _ProductsGridState extends State<ProductsGrid> {
     var list = source.where((p) {
       final matchSearch =
           p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-              p.category.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchFilter = _selectedFilter == 'All' || p.status == _selectedFilter;
+          p.category.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchFilter =
+          _selectedFilter == 'All' || p.status == _selectedFilter;
       final matchCategory =
           _activeCategory == null || p.category == _activeCategory!.label;
       return matchSearch && matchFilter && matchCategory;
@@ -46,10 +48,9 @@ class _ProductsGridState extends State<ProductsGrid> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsCubit, ProductsState>(
       builder: (context, state) {
-        final source = state.items.isNotEmpty
-            ? state.items.map(_toUiModel).toList()
-            : _mockProducts;
-        final products = _filtered(source);
+        final products = state.items.isNotEmpty
+            ? _filtered(state.items.map(_toUiModel).toList())
+            : <ProductModel>[];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,6 +85,12 @@ class _ProductsGridState extends State<ProductsGrid> {
                     itemCount: products.length,
                     itemBuilder: (_, i) => ProductCard(
                       product: products[i],
+                      onEdit: () {
+                        final entity = state.items.firstWhere(
+                          (e) => e.id == products[i].id,
+                        );
+                        widget.onEdit?.call(entity);
+                      },
                       onDelete: () => context
                           .read<ProductsCubit>()
                           .deleteProduct(products[i].id),
@@ -98,23 +105,36 @@ class _ProductsGridState extends State<ProductsGrid> {
   }
 
   ProductModel _toUiModel(ProductEntity entity) {
-    final price = entity.price ?? 0;
-    final status = entity.stockStatus ??
+    final basePrice = entity.price ?? 0;
+    final salePrice = entity.salePrice ?? 0;
+
+    // Valid sale only if salePrice is > 0 AND less than base price
+    final hasSale = salePrice > 0 && salePrice < basePrice;
+
+    final displayPrice = hasSale ? salePrice : basePrice;
+    final originalPrice = hasSale ? basePrice : null;
+
+    final status =
+        entity.stockStatus ??
         ((entity.unlimitedStock || (entity.stockQty ?? 0) > 20)
             ? 'In Stock'
             : (entity.stockQty ?? 0) > 0
-                ? 'Low Stock'
-                : 'Out of Stock');
+            ? 'Low Stock'
+            : 'Out of Stock');
     return ProductModel(
       id: entity.id,
       name: entity.name,
       category: entity.categoryName ?? 'General',
       brand: entity.sku ?? 'N/A',
-      price: price,
-      originalPrice: entity.salePrice != null ? entity.salePrice : null,
+      price: displayPrice,
+      originalPrice: originalPrice,
       stock: entity.unlimitedStock ? 999999 : (entity.stockQty ?? 0),
       status: status,
       color: const Color(0xFF1C1C1E),
+      mainImageUrl: entity.mainImageUrl,
+      imageUrls: entity.imageUrls,
+      description: entity.description,
+      specs: entity.specs,
     );
   }
 
@@ -211,7 +231,7 @@ class _ProductsGridState extends State<ProductsGrid> {
       children: [
         Container(
           width: 300.w,
-          height: 50.h,
+          height: 70.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
             color: AppColors.card,
@@ -295,18 +315,4 @@ class _ProductsGridState extends State<ProductsGrid> {
       ),
     );
   }
-
-  static final _mockProducts = <ProductModel>[
-    ProductModel(
-      id: 'PRD-001',
-      name: 'iPhone 15 Pro Max',
-      category: 'Smartphones',
-      brand: 'Apple',
-      price: 1299.00,
-      originalPrice: 1399.00,
-      stock: 48,
-      status: 'In Stock',
-      color: const Color(0xFF1C1C1E),
-    ),
-  ];
 }

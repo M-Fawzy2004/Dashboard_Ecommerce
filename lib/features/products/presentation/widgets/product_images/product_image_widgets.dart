@@ -215,7 +215,7 @@ class ImagePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (item.bytes != null) return Image.memory(item.bytes!, fit: BoxFit.cover);
-    return Image.network(item.url!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Container(color: const Color(0xFFF1F1F1), alignment: Alignment.center, child: Icon(Icons.broken_image_outlined, color: AppColors.textSecondary.withValues(alpha: 0.5))));
+    return Image.network(item.url!, fit: BoxFit.cover, errorBuilder: (_, _, _) => Container(color: const Color(0xFFF1F1F1), alignment: Alignment.center, child: Icon(Icons.broken_image_outlined, color: AppColors.textSecondary.withValues(alpha: 0.5))));
   }
 }
 

@@ -5,8 +5,23 @@ import '../../../../../shared/theme/app_spacing.dart';
 import 'common/product_form_section.dart';
 
 class ProductShippingCard extends StatefulWidget {
-  const ProductShippingCard({super.key, this.onChanged});
+  const ProductShippingCard({
+    super.key,
+    this.initialWeightKg,
+    this.initialLengthCm,
+    this.initialWidthCm,
+    this.initialHeightCm,
+    this.initialWeightUnit = 'kg',
+    this.initialDimensionUnit = 'cm',
+    this.onChanged,
+  });
 
+  final double? initialWeightKg;
+  final double? initialLengthCm;
+  final double? initialWidthCm;
+  final double? initialHeightCm;
+  final String? initialWeightUnit;
+  final String? initialDimensionUnit;
   final void Function({
     required double? weightKg,
     required double? lengthCm,
@@ -22,28 +37,29 @@ class ProductShippingCard extends StatefulWidget {
 
 class _ProductShippingCardState extends State<ProductShippingCard> {
   static const List<String> _weightUnits = [
-    'mg',
-    'g',
-    'kg',
-    'lb',
-    'oz',
-    'ton',
+    'mg', 'g', 'kg', 'lb', 'oz', 'ton',
   ];
   static const List<String> _dimensionUnits = [
-    'mm',
-    'cm',
-    'm',
-    'in',
-    'ft',
-    'yd',
+    'mm', 'cm', 'm', 'in', 'ft', 'yd',
   ];
 
-  final _weightCtrl = TextEditingController();
-  final _lengthCtrl = TextEditingController();
-  final _widthCtrl = TextEditingController();
-  final _heightCtrl = TextEditingController();
-  String? _weightUnit = 'kg';
-  String? _dimensionUnit = 'cm';
+  late final TextEditingController _weightCtrl;
+  late final TextEditingController _lengthCtrl;
+  late final TextEditingController _widthCtrl;
+  late final TextEditingController _heightCtrl;
+  late String? _weightUnit;
+  late String? _dimensionUnit;
+
+  @override
+  void initState() {
+    super.initState();
+    _weightCtrl = TextEditingController(text: widget.initialWeightKg?.toString());
+    _lengthCtrl = TextEditingController(text: widget.initialLengthCm?.toString());
+    _widthCtrl = TextEditingController(text: widget.initialWidthCm?.toString());
+    _heightCtrl = TextEditingController(text: widget.initialHeightCm?.toString());
+    _weightUnit = widget.initialWeightUnit ?? 'kg';
+    _dimensionUnit = widget.initialDimensionUnit ?? 'cm';
+  }
 
   @override
   void dispose() {

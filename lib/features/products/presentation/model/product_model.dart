@@ -11,6 +11,10 @@ class ProductModel {
     required this.stock,
     required this.status,
     required this.color,
+    this.mainImageUrl,
+    this.imageUrls = const [],
+    this.description,
+    this.specs,
   });
 
   final String id;
@@ -22,4 +26,8 @@ class ProductModel {
   final int stock;
   final String status;
   final Color color;
+  final String? mainImageUrl;
+  final List<String> imageUrls;
+  final String? description;
+  final Map<String, dynamic>? specs;
 }

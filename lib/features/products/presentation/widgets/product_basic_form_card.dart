@@ -6,9 +6,13 @@ import '../../../../../shared/theme/app_spacing.dart';
 class ProductBasicDetailsCard extends StatefulWidget {
   const ProductBasicDetailsCard({
     super.key,
+    this.initialName,
+    this.initialDescription,
     this.onChanged,
   });
 
+  final String? initialName;
+  final String? initialDescription;
   final void Function(String name, String description)? onChanged;
 
   @override
@@ -17,8 +21,15 @@ class ProductBasicDetailsCard extends StatefulWidget {
 }
 
 class _ProductBasicDetailsCardState extends State<ProductBasicDetailsCard> {
-  final _nameCtrl = TextEditingController();
-  final _descCtrl = TextEditingController();
+  late final TextEditingController _nameCtrl;
+  late final TextEditingController _descCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameCtrl = TextEditingController(text: widget.initialName);
+    _descCtrl = TextEditingController(text: widget.initialDescription);
+  }
 
   @override
   void dispose() {

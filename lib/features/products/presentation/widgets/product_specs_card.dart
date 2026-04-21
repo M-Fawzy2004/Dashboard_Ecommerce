@@ -4,8 +4,13 @@ import '../../../../../shared/theme/app_colors.dart';
 import 'common/product_form_section.dart';
 
 class ProductSpecsCard extends StatefulWidget {
-  const ProductSpecsCard({super.key, this.onChanged});
+  const ProductSpecsCard({
+    super.key,
+    this.initialSpecs,
+    this.onChanged,
+  });
 
+  final Map<String, dynamic>? initialSpecs;
   final ValueChanged<Map<String, String>>? onChanged;
 
   @override
@@ -14,6 +19,16 @@ class ProductSpecsCard extends StatefulWidget {
 
 class _ProductSpecsCardState extends State<ProductSpecsCard> {
   final List<MapEntry<TextEditingController, TextEditingController>> _specs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSpecs != null) {
+      widget.initialSpecs!.forEach((k, v) {
+        _specs.add(MapEntry(TextEditingController(text: k), TextEditingController(text: v?.toString())));
+      });
+    }
+  }
 
   void _addSpec() {
     setState(() {

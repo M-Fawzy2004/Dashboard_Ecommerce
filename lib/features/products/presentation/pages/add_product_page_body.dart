@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dashboard_ecommerce/features/products/presentation/widgets/product_images_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +19,9 @@ import '../widgets/add_product_action_buttons.dart';
 import '../widgets/product_images/product_image_models.dart';
 
 class AddProductPageBody extends StatefulWidget {
-  const AddProductPageBody({super.key});
+  const AddProductPageBody({super.key, this.initialProduct, this.onSuccess});
+  final ProductEntity? initialProduct;
+  final VoidCallback? onSuccess;
 
   @override
   State<AddProductPageBody> createState() => _AddProductPageBodyState();
@@ -45,6 +49,47 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
   List<ProductColorStock> _colorStocks = [];
   List<ProductImageItem> _images = [];
 
+  bool get _isEditing => widget.initialProduct != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      final p = widget.initialProduct!;
+      _selectedConfig = CategoryConfig.all.firstWhere(
+        (c) => c.id == p.categoryId,
+        orElse: () => CategoryConfig.all.firstWhere(
+          (c) => c.label == p.categoryName,
+          orElse: () => CategoryConfig.all[0],
+        ),
+      );
+      _name = p.name;
+      _description = p.description ?? '';
+      _price = p.price;
+      _salePrice = p.salePrice;
+      _currency = p.currency ?? 'USD';
+      _stockQty = p.stockQty;
+      _unlimitedStock = p.unlimitedStock;
+      _stockStatus = p.stockStatus ?? 'In Stock';
+      _sku = p.sku;
+      _isFeatured = p.isFeatured;
+      _weightKg = p.weightKg;
+      _lengthCm = p.lengthCm;
+      _widthCm = p.widthCm;
+      _heightCm = p.heightCm;
+      _weightUnit = p.weightUnit ?? 'kg';
+      _dimensionUnit = p.dimensionUnit ?? 'cm';
+      _specs = p.specs?.map((k, v) => MapEntry(k, v.toString())) ?? {};
+      _colorStocks = p.colorStocks;
+      _images = [
+        if (p.mainImageUrl != null) ProductImageItem.network(p.mainImageUrl!),
+        ...p.imageUrls
+            .where((url) => url != p.mainImageUrl)
+            .map((url) => ProductImageItem.network(url)),
+      ];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProductsCubit, ProductsState>(
@@ -52,9 +97,9 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
           previous.actionInProgress && !current.actionInProgress,
       listener: (context, state) {
         if (state.error != null && state.error!.isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error!)));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Product published successfully')),
@@ -71,10 +116,13 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
               AppSpacing.v20,
               ProductCategorySelectorCard(
                 selectedConfig: _selectedConfig,
-                onCategorySelected: (cfg) => setState(() => _selectedConfig = cfg),
+                onCategorySelected: (cfg) =>
+                    setState(() => _selectedConfig = cfg),
               ),
               AppSpacing.v16,
               ProductBasicDetailsCard(
+                initialName: _name,
+                initialDescription: _description,
                 onChanged: (name, description) {
                   _name = name;
                   _description = description;
@@ -82,60 +130,84 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
               ),
               AppSpacing.v16,
               ProductImagesCard(
+                initialMainUrl: widget.initialProduct?.mainImageUrl,
+                initialOtherUrls: widget.initialProduct?.imageUrls
+                    .where((url) => url != widget.initialProduct?.mainImageUrl)
+                    .toList(),
                 onChanged: (images) => _images = images,
               ),
               AppSpacing.v16,
               ProductColorsCard(
+                initialColors: _colorStocks,
                 onChanged: (colorStocks) => _colorStocks = colorStocks,
               ),
               AppSpacing.v16,
               ProductPricingCard(
-                onChanged: ({required price, required salePrice, required currency}) {
-                  _price = price;
-                  _salePrice = salePrice;
-                  _currency = currency;
-                },
+                initialPrice: _price,
+                initialSalePrice: _salePrice,
+                initialCurrency: _currency,
+                onChanged:
+                    ({required price, required salePrice, required currency}) {
+                      _price = price;
+                      _salePrice = salePrice;
+                      _currency = currency;
+                    },
               ),
               AppSpacing.v16,
               ProductInventoryCard(
-                onChanged: ({
-                  required stockQty,
-                  required unlimitedStock,
-                  required stockStatus,
-                  required sku,
-                  required isFeatured,
-                }) {
-                  _stockQty = stockQty;
-                  _unlimitedStock = unlimitedStock;
-                  _stockStatus = stockStatus;
-                  _sku = sku;
-                  _isFeatured = isFeatured;
-                },
+                initialStockQty: _stockQty,
+                initialUnlimitedStock: _unlimitedStock,
+                initialStockStatus: _stockStatus,
+                initialSku: _sku,
+                initialIsFeatured: _isFeatured,
+                onChanged:
+                    ({
+                      required stockQty,
+                      required unlimitedStock,
+                      required stockStatus,
+                      required sku,
+                      required isFeatured,
+                    }) {
+                      _stockQty = stockQty;
+                      _unlimitedStock = unlimitedStock;
+                      _stockStatus = stockStatus;
+                      _sku = sku;
+                      _isFeatured = isFeatured;
+                    },
               ),
               AppSpacing.v16,
               ProductSpecsCard(
+                initialSpecs: widget.initialProduct?.specs,
                 onChanged: (specs) => _specs = specs,
               ),
               AppSpacing.v16,
               ProductShippingCard(
-                onChanged: ({
-                  required weightKg,
-                  required lengthCm,
-                  required widthCm,
-                  required heightCm,
-                  required weightUnit,
-                  required dimensionUnit,
-                }) {
-                  _weightKg = weightKg;
-                  _lengthCm = lengthCm;
-                  _widthCm = widthCm;
-                  _heightCm = heightCm;
-                  _weightUnit = weightUnit ?? 'kg';
-                  _dimensionUnit = dimensionUnit ?? 'cm';
-                },
+                initialWeightKg: _weightKg,
+                initialLengthCm: _lengthCm,
+                initialWidthCm: _widthCm,
+                initialHeightCm: _heightCm,
+                initialWeightUnit: _weightUnit,
+                initialDimensionUnit: _dimensionUnit,
+                onChanged:
+                    ({
+                      required weightKg,
+                      required lengthCm,
+                      required widthCm,
+                      required heightCm,
+                      required weightUnit,
+                      required dimensionUnit,
+                    }) {
+                      _weightKg = weightKg;
+                      _lengthCm = lengthCm;
+                      _widthCm = widthCm;
+                      _heightCm = heightCm;
+                      _weightUnit = weightUnit ?? 'kg';
+                      _dimensionUnit = dimensionUnit ?? 'cm';
+                    },
               ),
               AppSpacing.v25,
               AddProductActionButtons(
+                label: _isEditing ? 'Update Product' : 'Publish Product',
                 isLoading: state.actionInProgress,
                 onPublish: () => _publish(context),
               ),
@@ -149,9 +221,9 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
 
   Future<void> _publish(BuildContext context) async {
     if (_name.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product name is required')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Product name is required')));
       return;
     }
 
@@ -166,6 +238,7 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
     }).toList();
 
     final input = ProductUpsertInput(
+      id: widget.initialProduct?.id,
       name: _name.trim(),
       description: _description.trim().isEmpty ? null : _description.trim(),
       categoryId: _selectedConfig?.id,
@@ -189,7 +262,26 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
       colorStocks: _colorStocks,
     );
 
-    await context.read<ProductsCubit>().createProduct(input);
+    if (_isEditing) {
+      await context.read<ProductsCubit>().updateProduct(input);
+    } else {
+      await context.read<ProductsCubit>().createProduct(input);
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Product ${_isEditing ? 'updated' : 'published'} successfully',
+          ),
+        ),
+      );
+      if (widget.onSuccess != null) {
+        widget.onSuccess!();
+      } else {
+        Navigator.pop(context);
+      }
+    }
     await context.read<ProductsCubit>().loadProducts();
   }
 }

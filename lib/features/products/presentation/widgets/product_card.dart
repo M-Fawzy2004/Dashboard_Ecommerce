@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../model/product_model.dart';
 
+import '../widgets/product_details_dialog.dart';
+
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
@@ -13,6 +15,15 @@ class ProductCard extends StatelessWidget {
   final ProductModel product;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+
+  void _showDetails(BuildContext context) {
+    ProductDetailsDialog.show(
+      context,
+      product,
+      onEdit: onEdit,
+      onDelete: onDelete,
+    );
+  }
 
   Color get _statusColor {
     switch (product.status) {
@@ -28,123 +39,168 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasDiscount = product.originalPrice != null;
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image / Color placeholder
-          Expanded(
-            flex: 5,
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    color: product.color.withValues(alpha: 0.12),
-                    child: Center(
-                      child: Icon(
-                        _categoryIcon(product.category),
-                        size: 48.sp,
-                        color: product.color.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 10.h,
-                    right: 10.w,
-                    child: _StatusBadge(status: product.status, color: _statusColor),
-                  ),
-                  if (hasDiscount)
-                    Positioned(
-                      top: 10.h,
-                      left: 10.w,
-                      child: _DiscountBadge(
-                        price: product.price,
-                        originalPrice: product.originalPrice!,
-                      ),
-                    ),
-                ],
-              ),
+    return InkWell(
+      onTap: () => _showDetails(context),
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          ),
-          // Info
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: EdgeInsets.all(12.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                      height: 1.3,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    '${product.brand} · ${product.category}',
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: AppColors.textSecondary.withValues(alpha: 0.6),
-                    ),
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '\$${product.price.toStringAsFixed(0)}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            if (hasDiscount)
-                              Text(
-                                '\$${product.originalPrice!.toStringAsFixed(0)}',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: AppColors.textSecondary.withValues(alpha: 0.4),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image / Color placeholder
+            Expanded(
+              flex: 5,
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: product.color.withValues(alpha: 0.05),
+                      ),
+                      child: product.mainImageUrl != null
+                          ? Center(
+                            child: Image.network(
+                                product.mainImageUrl!,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => Center(
+                                  child: Icon(
+                                    _categoryIcon(product.category),
+                                    size: 32.sp,
+                                    color: product.color.withValues(alpha: 0.5),
+                                  ),
                                 ),
                               ),
-                          ],
+                          )
+                          : Center(
+                              child: Icon(
+                                _categoryIcon(product.category),
+                                size: 48.sp,
+                                color: product.color.withValues(alpha: 0.5),
+                              ),
+                            ),
+                    ),
+                    Positioned(
+                      top: 10.h,
+                      right: 10.w,
+                      child: _StatusBadge(status: product.status, color: _statusColor),
+                    ),
+                    if (hasDiscount)
+                      Positioned(
+                        top: 10.h,
+                        left: 10.w,
+                        child: _DiscountBadge(
+                          price: product.price,
+                          originalPrice: product.originalPrice!,
                         ),
                       ),
-                      _StockIndicator(stock: product.stock, color: _statusColor),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  _CardActionRow(
-                    onEdit: onEdit,
-                    onDelete: onDelete,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+            // Info
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: EdgeInsets.all(12.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                        height: 1.3,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '${product.brand} · ${product.category}',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppColors.textSecondary.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '\$${product.price.toStringAsFixed(0)}',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              if (hasDiscount)
+                                Text(
+                                  '\$${product.originalPrice!.toStringAsFixed(0)}',
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    decoration: TextDecoration.lineThrough,
+                                    color: AppColors.textSecondary.withValues(alpha: 0.4),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        _StockIndicator(stock: product.stock, color: _statusColor),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    _CardActionRow(
+                      onEdit: onEdit,
+                      onDelete: () => _confirmDelete(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        title: const Text('Delete Product?'),
+        content: Text('Are you sure you want to delete "${product.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              onDelete?.call();
+            },
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            child: const Text('Delete'),
           ),
         ],
       ),

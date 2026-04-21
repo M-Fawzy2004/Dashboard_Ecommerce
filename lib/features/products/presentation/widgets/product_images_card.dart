@@ -6,8 +6,15 @@ import 'product_images/product_image_models.dart';
 import 'product_images/product_image_widgets.dart';
 
 class ProductImagesCard extends StatefulWidget {
-  const ProductImagesCard({super.key, this.onChanged});
+  const ProductImagesCard({
+    super.key,
+    this.initialMainUrl,
+    this.initialOtherUrls,
+    this.onChanged,
+  });
 
+  final String? initialMainUrl;
+  final List<String>? initialOtherUrls;
   final ValueChanged<List<ProductImageItem>>? onChanged;
 
   @override
@@ -18,6 +25,17 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   final ImagePicker _picker = ImagePicker();
   ProductImageItem? _mainImage;
   final List<ProductImageItem> _thumbImages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialMainUrl != null) {
+      _mainImage = ProductImageItem.network(widget.initialMainUrl!);
+    }
+    if (widget.initialOtherUrls != null) {
+      _thumbImages.addAll(widget.initialOtherUrls!.map((url) => ProductImageItem.network(url)));
+    }
+  }
 
   Future<void> _pickMainImage() async {
     final ProductImageItem? selected = await _selectImageSource();
@@ -158,7 +176,7 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
                     child: Image.network(
                       url,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Center(
+                      errorBuilder: (_, _, _) => Center(
                         child: Text(
                           'Invalid image link',
                           style: TextStyle(
@@ -210,7 +228,7 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
 
   void _notify() {
     final images = <ProductImageItem>[
-      if (_mainImage != null) _mainImage!,
+      ?_mainImage,
       ..._thumbImages,
     ];
     widget.onChanged?.call(images);

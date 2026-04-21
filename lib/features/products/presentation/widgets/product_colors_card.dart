@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
@@ -5,8 +7,13 @@ import '../../domain/entities/product_entity.dart';
 import 'common/product_form_section.dart';
 
 class ProductColorsCard extends StatefulWidget {
-  const ProductColorsCard({super.key, this.onChanged});
+  const ProductColorsCard({
+    super.key,
+    this.initialColors,
+    this.onChanged,
+  });
 
+  final List<ProductColorStock>? initialColors;
   final ValueChanged<List<ProductColorStock>>? onChanged;
 
   @override
@@ -14,7 +21,7 @@ class ProductColorsCard extends StatefulWidget {
 }
 
 class _ProductColorsCardState extends State<ProductColorsCard> {
-  final Set<String> _selected = {'White', 'Black', 'Blue', 'Orange'};
+  final Set<String> _selected = {};
   final Map<String, _ColorStockConfig> _colorStock = {};
 
   static const List<_ColorOption> _allColors = [
@@ -48,8 +55,21 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
   @override
   void initState() {
     super.initState();
-    for (final color in _selected) {
-      _colorStock[color] = _ColorStockConfig();
+    if (widget.initialColors != null && widget.initialColors!.isNotEmpty) {
+      for (final stock in widget.initialColors!) {
+        _selected.add(stock.colorName);
+        _colorStock[stock.colorName] = _ColorStockConfig(
+          qty: stock.quantity.toString(),
+          unlimited: stock.unlimited,
+        );
+      }
+    } else {
+      // Default initial colors for new products
+      final defaults = {'White', 'Black', 'Blue', 'Orange'};
+      for (final color in defaults) {
+        _selected.add(color);
+        _colorStock[color] = _ColorStockConfig();
+      }
     }
   }
 
@@ -216,9 +236,8 @@ class _ColorOption {
 }
 
 class _ColorStockConfig {
-  _ColorStockConfig()
-      : qtyCtrl = TextEditingController(text: '0'),
-        unlimited = false;
+  _ColorStockConfig({String qty = '0', this.unlimited = false})
+      : qtyCtrl = TextEditingController(text: qty);
 
   final TextEditingController qtyCtrl;
   bool unlimited;

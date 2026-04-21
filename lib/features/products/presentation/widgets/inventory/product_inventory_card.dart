@@ -5,8 +5,21 @@ import '../../../../../shared/theme/app_spacing.dart';
 import '../common/product_form_section.dart';
 
 class ProductInventoryCard extends StatefulWidget {
-  const ProductInventoryCard({super.key, this.onChanged});
+  const ProductInventoryCard({
+    super.key,
+    this.initialStockQty,
+    this.initialUnlimitedStock = true,
+    this.initialStockStatus = 'In Stock',
+    this.initialSku,
+    this.initialIsFeatured = false,
+    this.onChanged,
+  });
 
+  final int? initialStockQty;
+  final bool initialUnlimitedStock;
+  final String initialStockStatus;
+  final String? initialSku;
+  final bool initialIsFeatured;
   final void Function({
     required int? stockQty,
     required bool unlimitedStock,
@@ -20,12 +33,22 @@ class ProductInventoryCard extends StatefulWidget {
 }
 
 class _ProductInventoryCardState extends State<ProductInventoryCard> {
-  final _stockCtrl = TextEditingController();
-  final _skuCtrl = TextEditingController();
+  late final TextEditingController _stockCtrl;
+  late final TextEditingController _skuCtrl;
 
-  bool _unlimitedStock = true;
-  bool _isFeatured = false;
-  String _stockStatus = 'In Stock';
+  late bool _unlimitedStock;
+  late bool _isFeatured;
+  late String _stockStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _stockCtrl = TextEditingController(text: widget.initialStockQty?.toString());
+    _skuCtrl = TextEditingController(text: widget.initialSku);
+    _unlimitedStock = widget.initialUnlimitedStock;
+    _isFeatured = widget.initialIsFeatured;
+    _stockStatus = widget.initialStockStatus;
+  }
 
   static const _statusOptions = [
     {'label': 'In Stock', 'color': Color(0xFF10B981)},

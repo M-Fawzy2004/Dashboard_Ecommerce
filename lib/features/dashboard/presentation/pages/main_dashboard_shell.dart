@@ -7,6 +7,7 @@ import 'dashboard_page_body.dart';
 import '../../../products/presentation/pages/products_page_body.dart';
 import '../../../products/presentation/pages/add_product_page_body.dart';
 import '../../../orders/presentation/pages/orders_page_body.dart';
+import '../../../products/domain/entities/product_entity.dart';
 
 class MainDashboardShell extends StatefulWidget {
   const MainDashboardShell({super.key, this.initialPage = 'home'});
@@ -18,6 +19,7 @@ class MainDashboardShell extends StatefulWidget {
 
 class _MainDashboardShellState extends State<MainDashboardShell> {
   late String _activeKey;
+  ProductEntity? _editProduct;
 
   @override
   void initState() {
@@ -32,9 +34,21 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
       case 'orders':
         return const OrdersPageBody();
       case 'product_list':
-        return const ProductsPageBody();
+        return ProductsPageBody(
+          onEdit: (product) {
+            setState(() {
+              _editProduct = product;
+              _activeKey = 'add_products';
+            });
+          },
+        );
       case 'add_products':
-        return const AddProductPageBody();
+        final child = AddProductPageBody(
+          initialProduct: _editProduct,
+          onSuccess: () => setState(() => _activeKey = 'product_list'),
+        );
+        // Reset editProduct after it's passed or handle it inside
+        return child;
       case 'categories':
         return const CategoriesManagementBody();
       default:
@@ -53,7 +67,10 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
           activeKey: _activeKey,
           onItemTap: (key) {
             if (['home', 'product_list', 'add_products', 'orders', 'customers', 'categories'].contains(key)) {
-              setState(() => _activeKey = key);
+              setState(() {
+                _activeKey = key;
+                if (key == 'add_products') _editProduct = null;
+              });
               if (isMobile && Scaffold.of(context).isDrawerOpen) {
                 Navigator.of(context).pop();
               } else if (isMobile) {
