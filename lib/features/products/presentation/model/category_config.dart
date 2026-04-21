@@ -36,7 +36,7 @@ class CategoryConfig {
   final List<String> sizeOptions;
   final List<String> brandOptions;
 
-  static const all = [_womensFashion, _mensFashion, _mobile, _tablet, _electronics, _laptop, _fashion, _appliances, _sports];
+  static List<CategoryConfig> all = [_womensFashion, _mensFashion, _mobile, _tablet, _electronics, _laptop, _fashion, _appliances, _sports];
 
   // ── Women's Fashion ────────────────────────────────────────────────────────
   static const _womensFashion = CategoryConfig(

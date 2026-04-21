@@ -1,3 +1,4 @@
+import 'package:dashboard_ecommerce/features/categories/presentation/pages/categories_management_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_spacing.dart';
@@ -34,6 +35,8 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
         return const ProductsPageBody();
       case 'add_products':
         return const AddProductPageBody();
+      case 'categories':
+        return const CategoriesManagementBody();
       default:
         return const DashboardPageBody();
     }
@@ -49,7 +52,7 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
         final sideNav = SideNav(
           activeKey: _activeKey,
           onItemTap: (key) {
-            if (['home', 'product_list', 'add_products', 'orders', 'customers'].contains(key)) {
+            if (['home', 'product_list', 'add_products', 'orders', 'customers', 'categories'].contains(key)) {
               setState(() => _activeKey = key);
               if (isMobile && Scaffold.of(context).isDrawerOpen) {
                 Navigator.of(context).pop();
