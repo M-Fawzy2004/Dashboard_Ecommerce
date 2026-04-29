@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:dashboard_ecommerce/features/categories/presentation/cubit/categories_cubit.dart';
 import 'package:dashboard_ecommerce/features/products/presentation/widgets/product_images_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,11 +57,12 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
     super.initState();
     if (_isEditing) {
       final p = widget.initialProduct!;
-      _selectedConfig = CategoryConfig.all.firstWhere(
+      final categories = context.read<CategoriesCubit>().state.categories;
+      _selectedConfig = categories.firstWhere(
         (c) => c.id == p.categoryId,
-        orElse: () => CategoryConfig.all.firstWhere(
+        orElse: () => categories.firstWhere(
           (c) => c.label == p.categoryName,
-          orElse: () => CategoryConfig.all[0],
+          orElse: () => categories.isNotEmpty ? categories[0] : CategoryConfig.womensFashion,
         ),
       );
       _name = p.name;

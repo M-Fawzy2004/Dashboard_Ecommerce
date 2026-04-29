@@ -1,5 +1,7 @@
 import 'package:dashboard_ecommerce/features/products/presentation/model/category_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dashboard_ecommerce/features/categories/presentation/cubit/categories_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
@@ -15,18 +17,15 @@ class CategoriesManagementBody extends StatefulWidget {
 }
 
 class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
-  final Set<String> _customIds = {};
-
   // ── Actions ────────────────────────────────────────────────────────────────
 
   void _showAddDialog() {
     showDialog(
       context: context,
       builder: (_) => AddCategoryDialog(
-        onAdd: (config) => setState(() {
-          CategoryConfig.all.add(config);
-          _customIds.add(config.id);
-        }),
+        onAdd: (config) {
+          context.read<CategoriesCubit>().addCategory(config);
+        },
       ),
     );
   }
@@ -63,10 +62,7 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
           FilledButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              setState(() {
-                CategoryConfig.all.removeWhere((c) => c.id == cat.id);
-                _customIds.remove(cat.id);
-              });
+              context.read<CategoriesCubit>().deleteCategory(cat.id);
             },
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.error,
@@ -83,18 +79,25 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          AppSpacing.v25,
-          _buildStats(),
-          AppSpacing.v25,
-          _buildGrid(),
-          AppSpacing.v25,
-        ],
-      ),
+    return BlocBuilder<CategoriesCubit, CategoriesState>(
+      builder: (context, state) {
+        if (state.isLoading && state.categories.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              AppSpacing.v25,
+              _buildStats(state.categories),
+              AppSpacing.v25,
+              _buildGrid(state.categories),
+              AppSpacing.v25,
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -129,7 +132,7 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
     );
   }
 
-  Widget _buildStats() {
+  Widget _buildStats(List<CategoryConfig> categories) {
     return Wrap(
       spacing: 14.w,
       runSpacing: 14.h,
@@ -137,26 +140,26 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
         CategoryStatChip(
           icon: Icons.category_rounded,
           label: 'Total Categories',
-          value: '${CategoryConfig.all.length}',
+          value: '${categories.length}',
           color: AppColors.primary,
         ),
         CategoryStatChip(
           icon: Icons.add_box_outlined,
           label: 'Custom Added',
-          value: '${_customIds.length}',
+          value: '${categories.where((c) => c.id.startsWith('custom_')).length}',
           color: AppColors.success,
         ),
         CategoryStatChip(
           icon: Icons.lock_outlined,
           label: 'System Default',
-          value: '${CategoryConfig.all.length - _customIds.length}',
+          value: '${categories.where((c) => !c.id.startsWith('custom_')).length}',
           color: AppColors.textSecondary,
         ),
       ],
     );
   }
 
-  Widget _buildGrid() {
+  Widget _buildGrid(List<CategoryConfig> categories) {
     return LayoutBuilder(builder: (context, constraints) {
       int crossAxisCount = 4;
       if (constraints.maxWidth < 500) {
@@ -174,12 +177,12 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
           mainAxisSpacing: 14.h,
           mainAxisExtent: 150.h,
         ),
-        itemCount: CategoryConfig.all.length,
+        itemCount: categories.length,
         itemBuilder: (context, index) {
-          final cat = CategoryConfig.all[index];
+          final cat = categories[index];
           return CategoryCard(
             config: cat,
-            isCustom: _customIds.contains(cat.id),
+            isCustom: cat.id.startsWith('custom_'),
             onDelete: () => _confirmDelete(cat),
           );
         },

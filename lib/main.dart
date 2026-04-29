@@ -11,6 +11,8 @@ import 'features/orders/presentation/pages/orders_page.dart';
 import 'features/products/presentation/pages/add_product_page.dart';
 import 'features/products/presentation/pages/products_page.dart';
 import 'features/products/presentation/cubit/products_cubit.dart';
+import 'features/categories/presentation/cubit/categories_cubit.dart';
+import 'features/categories/data/datasources/categories_remote_data_source.dart';
 import 'shared/theme/app_theme.dart';
 
 Future<void> main() async {
@@ -39,6 +41,10 @@ class DashboardApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit()..checkAuth()),
         BlocProvider(create: (context) => ProductsCubit()..loadProducts()),
+        BlocProvider(
+          create: (context) => CategoriesCubit(CategoriesRemoteDataSourceImpl())
+            ..loadCategories(),
+        ),
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {

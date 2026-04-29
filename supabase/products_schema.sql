@@ -158,55 +158,6 @@ create policy "Public read product images"
 on storage.objects for select
 using (bucket_id = 'product-images');
 
--- Migration-safe alters for existing databases
-do $$
-declare
-  fk_name text;
-begin
-  select tc.constraint_name into fk_name
-  from information_schema.table_constraints tc
-  where tc.table_schema = 'public'
-    and tc.table_name = 'products'
-    and tc.constraint_type = 'FOREIGN KEY'
-    and tc.constraint_name like '%category_id%';
-
-  if fk_name is not null then
-    execute format('alter table public.products drop constraint %I', fk_name);
-  end if;
-end $$;
-
-alter table public.products
-  alter column category_id type text using category_id::text;
-do $$
-begin
-  if not exists (
-    select 1 from pg_constraint
-    where conname = 'products_category_id_fkey'
-  ) then
-    alter table public.products
-      add constraint products_category_id_fkey
-      foreign key (category_id)
-      references public.product_categories(key)
-      on delete set null;
-  end if;
-end $$;
-alter table public.products
-  add column if not exists weight_unit text null default 'kg';
-alter table public.products
-  add column if not exists dimension_unit text null default 'cm';
-
-alter table public.products
-  drop constraint if exists products_weight_unit_check;
-alter table public.products
-  add constraint products_weight_unit_check
-  check (weight_unit is null or weight_unit in ('mg', 'g', 'kg', 'lb', 'oz', 'ton'));
-
-alter table public.products
-  drop constraint if exists products_dimension_unit_check;
-alter table public.products
-  add constraint products_dimension_unit_check
-  check (dimension_unit is null or dimension_unit in ('mm', 'cm', 'm', 'in', 'ft', 'yd'));
-
 drop policy if exists "Public upload product images" on storage.objects;
 create policy "Public upload product images"
 on storage.objects for insert

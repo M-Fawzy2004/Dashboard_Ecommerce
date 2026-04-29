@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../features/categories/presentation/cubit/categories_cubit.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 import '../model/category_config.dart';
@@ -20,42 +22,59 @@ class ProductCategorySelectorCard extends StatelessWidget {
     return ProductFormSection(
       title: 'Product Category',
       icon: Icons.category_outlined,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Choose a category to see the relevant fields for your product.',
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.textSecondary.withValues(alpha: 0.6),
-            ),
-          ),
-          AppSpacing.v16,
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 90.w,
-                crossAxisSpacing: 10.w,
-                mainAxisSpacing: 10.h,
-                childAspectRatio: 1.1,
+      child: BlocBuilder<CategoriesCubit, CategoriesState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: CircularProgressIndicator(),
+            ));
+          }
+          
+          final categories = state.categories;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Choose a category to see the relevant fields for your product.',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.textSecondary.withValues(alpha: 0.6),
+                ),
               ),
-            itemCount: CategoryConfig.all.length,
-            itemBuilder: (context, index) {
-              final cat = CategoryConfig.all[index];
-              final isSelected = selectedConfig?.id == cat.id;
-              return _CategoryTile(
-                config: cat,
-                isSelected: isSelected,
-                onTap: () => onCategorySelected(cat),
-              );
-            },
-          ),
-          if (selectedConfig != null) ...[
-            AppSpacing.v16,
-            _ActiveCategoryBadge(config: selectedConfig!),
-          ],
-        ],
+              AppSpacing.v16,
+              if (categories.isEmpty)
+                Text('No categories found. Add one in the Categories section.', 
+                  style: TextStyle(fontSize: 12.sp, color: AppColors.error))
+              else
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 90.w,
+                    crossAxisSpacing: 10.w,
+                    mainAxisSpacing: 10.h,
+                    childAspectRatio: 1.1,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final cat = categories[index];
+                    final isSelected = selectedConfig?.id == cat.id;
+                    return _CategoryTile(
+                      config: cat,
+                      isSelected: isSelected,
+                      onTap: () => onCategorySelected(cat),
+                    );
+                  },
+                ),
+              if (selectedConfig != null) ...[
+                AppSpacing.v16,
+                _ActiveCategoryBadge(config: selectedConfig!),
+              ],
+            ],
+          );
+        },
       ),
     );
   }
