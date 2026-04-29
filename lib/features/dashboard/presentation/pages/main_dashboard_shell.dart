@@ -7,6 +7,7 @@ import 'dashboard_page_body.dart';
 import '../../../products/presentation/pages/products_page_body.dart';
 import '../../../products/presentation/pages/add_product_page_body.dart';
 import '../../../orders/presentation/pages/orders_page_body.dart';
+import '../../../reviews/presentation/pages/reviews_page_body.dart';
 import '../../../products/domain/entities/product_entity.dart';
 
 class MainDashboardShell extends StatefulWidget {
@@ -51,6 +52,15 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
         return child;
       case 'categories':
         return const CategoriesManagementBody();
+      case 'reviews':
+        return ReviewsPageBody(
+          onProductTap: (product) {
+            setState(() {
+              _editProduct = product;
+              _activeKey = 'add_products';
+            });
+          },
+        );
       default:
         return const DashboardPageBody();
     }
@@ -66,7 +76,7 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
         final sideNav = SideNav(
           activeKey: _activeKey,
           onItemTap: (key) {
-            if (['home', 'product_list', 'add_products', 'orders', 'customers', 'categories'].contains(key)) {
+            if (['home', 'product_list', 'add_products', 'orders', 'customers', 'categories', 'reviews'].contains(key)) {
               setState(() {
                 _activeKey = key;
                 if (key == 'add_products') _editProduct = null;

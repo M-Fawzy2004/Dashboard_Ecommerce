@@ -96,7 +96,7 @@ class _SideNavState extends State<SideNav> {
                     _NavItem(Icons.add_box_outlined, 'Add Products', 'add_products'),
                     _NavItem(Icons.list_alt_outlined, 'Product List', 'product_list'),
                     _NavItem(Icons.category_rounded, 'Categories', 'categories'),
-                    _NavItem(Icons.rate_review_outlined, 'Product Reviews', 'product_reviews'),
+                    _NavItem(Icons.rate_review_outlined, 'Product Reviews', 'reviews'),
                   ]),
                 ],
               ),
