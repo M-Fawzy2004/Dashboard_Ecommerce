@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
-import '../../../../../shared/theme/app_spacing.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 
 class SideNav extends StatefulWidget {
@@ -27,8 +26,8 @@ class _SideNavState extends State<SideNav> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOutCubic,
-      width: _isCollapsed ? 80.w : 260.w,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
+      width: _isCollapsed ? 70 : 260,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: AppColors.card,
@@ -39,7 +38,7 @@ class _SideNavState extends State<SideNav> {
         children: [
           // Branding & Toggle
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Row(
               mainAxisAlignment: _isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
               children: [
@@ -48,21 +47,20 @@ class _SideNavState extends State<SideNav> {
                     child: Row(
                       children: [
                         Container(
-                          width: 32.w,
-                          height: 32.h,
+                          width: 32,
+                          height: 32,
                           decoration: BoxDecoration(
                             color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(8.r),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(Icons.dashboard, color: Colors.white, size: 20),
                         ),
-                        SizedBox(width: 12.w),
+                        const SizedBox(width: 12),
                         const Flexible(
                           child: Text(
                             'Dashboard',
                             maxLines: 1,
-                            softWrap: false,
-                            overflow: TextOverflow.clip,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                           ),
                         ),
@@ -79,7 +77,7 @@ class _SideNavState extends State<SideNav> {
               ],
             ),
           ),
-          AppSpacing.v25,
+          const SizedBox(height: 25),
           
           Expanded(
             child: SingleChildScrollView(
@@ -104,23 +102,28 @@ class _SideNavState extends State<SideNav> {
           ),
           
           const Divider(),
-          AppSpacing.v10,
+          const SizedBox(height: 10),
           // User Profile
           _buildUserInfo(),
-          AppSpacing.v10,
+          const SizedBox(height: 10),
           if (!_isCollapsed)
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton.icon(
+              child: OutlinedButton(
                 onPressed: () {},
-                icon: const Icon(Icons.open_in_new, size: 16),
-                label: const Text('Your Shop'),
                 style: OutlinedButton.styleFrom(
                   alignment: Alignment.centerLeft,
                   foregroundColor: AppColors.textPrimary,
                   side: const BorderSide(color: Color(0xFFD1D5DB)),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.open_in_new, size: 16),
+                    SizedBox(width: 8),
+                    Expanded(child: Text('Your Shop', maxLines: 1, overflow: TextOverflow.ellipsis)),
+                  ],
                 ),
               ),
             )
@@ -138,43 +141,51 @@ class _SideNavState extends State<SideNav> {
 
   Widget _buildUserInfo() {
     if (_isCollapsed) {
-      return Center(
+      return const Center(
         child: CircleAvatar(
-          radius: 18.r,
+          radius: 18,
           backgroundColor: AppColors.background,
-          child: const Icon(Icons.person_outline, color: AppColors.textSecondary),
+          child: Icon(Icons.person_outline, color: AppColors.textSecondary),
         ),
       );
     }
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 4.w),
-      leading: CircleAvatar(
-        radius: 18.r,
-        backgroundColor: AppColors.background,
-        child: const Icon(Icons.person_outline, color: AppColors.textSecondary),
-      ),
-      title: Text(
-        'Dealport',
-        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
-      ),
-      trailing: IconButton(
-        icon: const Icon(Icons.logout, size: 18),
-        onPressed: () {
-          context.read<AuthCubit>().logout();
-          Navigator.of(context).pushReplacementNamed('/login');
-        },
-      ),
+    return Row(
+      children: [
+        const CircleAvatar(
+          radius: 18,
+          backgroundColor: AppColors.background,
+          child: Icon(Icons.person_outline, color: AppColors.textSecondary),
+        ),
+        const SizedBox(width: 12),
+        const Expanded(
+          child: Text(
+            'Dealport',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.logout, size: 18),
+          onPressed: () {
+            context.read<AuthCubit>().logout();
+            Navigator.of(context).pushReplacementNamed('/login');
+          },
+        ),
+      ],
     );
   }
 
   Widget _buildHeader(String title) {
     if (_isCollapsed) return const SizedBox(height: 20);
     return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 8.h),
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(
         title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: 11.sp,
+          fontSize: 11,
           fontWeight: FontWeight.w800,
           color: AppColors.textSecondary.withValues(alpha: 0.5),
           letterSpacing: 0.8,
@@ -214,40 +225,40 @@ class _SideNavTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3.h),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Stack(
         children: [
           Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(10),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: EdgeInsets.symmetric(horizontal: isCollapsed ? 0 : 16.w, vertical: 13.h),
+                padding: EdgeInsets.symmetric(horizontal: isCollapsed ? 0 : 16, vertical: 13),
                 alignment: isCollapsed ? Alignment.center : Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: active ? AppColors.primary.withValues(alpha: 0.12) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
-                  mainAxisAlignment: isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       item.icon,
-                      size: 20.sp,
+                      size: 20,
                       color: active ? AppColors.primary : AppColors.textSecondary,
                     ),
                     if (!isCollapsed) ...[
-                      SizedBox(width: 14.w),
-                      Expanded(
+                      const SizedBox(width: 14),
+                      Flexible(
                         child: Text(
                           item.label,
                           maxLines: 1,
                           softWrap: false,
-                          overflow: TextOverflow.fade,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 13.sp,
+                            fontSize: 13,
                             fontWeight: active ? FontWeight.w800 : FontWeight.w500,
                             color: active ? AppColors.primary : AppColors.textPrimary,
                           ),

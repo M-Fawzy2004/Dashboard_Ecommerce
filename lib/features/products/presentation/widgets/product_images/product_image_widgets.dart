@@ -36,8 +36,8 @@ class MainImageUploadCard extends StatelessWidget {
           GestureDetector(
             onTap: mainImage == null ? onBrowse : null,
             child: Container(
-              height: 210.h,
-              width: 170.w,
+              height: 220.h,
+              width: 220.w,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12.r),
@@ -46,7 +46,7 @@ class MainImageUploadCard extends StatelessWidget {
               child: mainImage != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(11.r),
-                      child: ImagePreview(item: mainImage!),
+                      child: ImagePreview(item: mainImage!, fit: BoxFit.contain),
                     )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,12 +210,24 @@ class ThumbImageTile extends StatelessWidget {
 }
 
 class ImagePreview extends StatelessWidget {
-  const ImagePreview({super.key, required this.item});
+  const ImagePreview({super.key, required this.item, this.fit = BoxFit.cover});
   final ProductImageItem item;
+  final BoxFit fit;
   @override
   Widget build(BuildContext context) {
-    if (item.bytes != null) return Image.memory(item.bytes!, fit: BoxFit.cover);
-    return Image.network(item.url!, fit: BoxFit.cover, errorBuilder: (_, _, _) => Container(color: const Color(0xFFF1F1F1), alignment: Alignment.center, child: Icon(Icons.broken_image_outlined, color: AppColors.textSecondary.withValues(alpha: 0.5))));
+    if (item.bytes != null) return Image.memory(item.bytes!, fit: fit);
+    return Image.network(
+      item.url!,
+      fit: fit,
+      errorBuilder: (_, _, _) => Container(
+        color: const Color(0xFFF1F1F1),
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.broken_image_outlined,
+          color: AppColors.textSecondary.withValues(alpha: 0.5),
+        ),
+      ),
+    );
   }
 }
 

@@ -52,11 +52,67 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   }
 
   Future<void> _addThumbImage() async {
-    if (_thumbImages.length >= 5) return;
-    final ProductImageItem? selected = await _selectImageSource();
-    if (!mounted || selected == null) return;
-    setState(() => _thumbImages.add(selected));
-    _notify();
+    final source = await showModalBottomSheet<PickSource>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Choose image source',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 12.h),
+              SourceTile(
+                icon: Icons.link,
+                title: 'From internet link',
+                subtitle: 'Paste image URL then preview before adding',
+                onTap: () => Navigator.pop(ctx, PickSource.network),
+              ),
+              SizedBox(height: 10.h),
+              SourceTile(
+                icon: Icons.photo_library_outlined,
+                title: 'From device (Multi-select)',
+                subtitle: 'Pick one or more images from your gallery',
+                onTap: () => Navigator.pop(ctx, PickSource.device),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
+    if (source == PickSource.device) {
+      final List<XFile> picked = await _picker.pickMultiImage();
+      if (picked.isEmpty) return;
+      
+      final List<ProductImageItem> newImages = [];
+      for (var file in picked) {
+        newImages.add(ProductImageItem.memory(await file.readAsBytes()));
+      }
+      
+      setState(() => _thumbImages.addAll(newImages));
+      _notify();
+    } else {
+      final selected = await _pickFromNetworkUrl();
+      if (selected != null) {
+        setState(() => _thumbImages.add(selected));
+        _notify();
+      }
+    }
   }
 
   void _removeThumb(int index) {

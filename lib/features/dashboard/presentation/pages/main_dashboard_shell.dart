@@ -28,41 +28,22 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
     _activeKey = widget.initialPage;
   }
 
-  Widget _buildBody() {
+  int _getSelectedIndex() {
     switch (_activeKey) {
       case 'home':
-        return const DashboardPageBody();
+        return 0;
       case 'orders':
-        return const OrdersPageBody();
+        return 1;
       case 'product_list':
-        return ProductsPageBody(
-          onEdit: (product) {
-            setState(() {
-              _editProduct = product;
-              _activeKey = 'add_products';
-            });
-          },
-        );
+        return 2;
       case 'add_products':
-        final child = AddProductPageBody(
-          initialProduct: _editProduct,
-          onSuccess: () => setState(() => _activeKey = 'product_list'),
-        );
-        // Reset editProduct after it's passed or handle it inside
-        return child;
+        return 3;
       case 'categories':
-        return const CategoriesManagementBody();
+        return 4;
       case 'reviews':
-        return ReviewsPageBody(
-          onProductTap: (product) {
-            setState(() {
-              _editProduct = product;
-              _activeKey = 'add_products';
-            });
-          },
-        );
+        return 5;
       default:
-        return const DashboardPageBody();
+        return 0;
     }
   }
 
@@ -76,17 +57,20 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
         final sideNav = SideNav(
           activeKey: _activeKey,
           onItemTap: (key) {
-            if (['home', 'product_list', 'add_products', 'orders', 'customers', 'categories', 'reviews'].contains(key)) {
+            final validKeys = [
+              'home',
+              'orders',
+              'product_list',
+              'add_products',
+              'categories',
+              'reviews',
+            ];
+            if (validKeys.contains(key)) {
               setState(() {
                 _activeKey = key;
                 if (key == 'add_products') _editProduct = null;
               });
-              if (isMobile && Scaffold.of(context).isDrawerOpen) {
-                Navigator.of(context).pop();
-              } else if (isMobile) {
-                // If context isn't finding scaffold drawer state easily due to builder, popping via global isn't ideal but we can just pop context.
-                Navigator.pop(context);
-              }
+              if (isMobile) Navigator.pop(context);
             } else if (key == 'logout') {
               Navigator.of(context).pushReplacementNamed('/login');
             }
@@ -100,7 +84,10 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
                   backgroundColor: Colors.transparent,
                   title: Text(
                     'Dashboard',
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18.sp),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18.sp,
+                    ),
                   ),
                 )
               : null,
@@ -108,24 +95,47 @@ class _MainDashboardShellState extends State<MainDashboardShell> {
           body: SafeArea(
             bottom: false,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: isMobile ? 10.h : 20.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: isMobile ? 10.h : 20.h,
+              ),
               child: Row(
                 children: [
-                  if (!isMobile) ...[
-                    sideNav,
-                    AppSpacing.h25,
-                  ],
+                  if (!isMobile) ...[sideNav, AppSpacing.h25],
                   Expanded(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
-                      switchInCurve: Curves.easeOutCubic,
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                      child: KeyedSubtree(
-                        key: ValueKey(_activeKey),
-                        child: _buildBody(),
-                      ),
+                    child: IndexedStack(
+                      index: _getSelectedIndex(),
+                      children: [
+                        DashboardPageBody(
+                          onNavigate: (key) => setState(() => _activeKey = key),
+                        ),
+                        const OrdersPageBody(),
+                        ProductsPageBody(
+                          onEdit: (product) {
+                            setState(() {
+                              _editProduct = product;
+                              _activeKey = 'add_products';
+                            });
+                          },
+                        ),
+                        AddProductPageBody(
+                          key: ValueKey(
+                            _editProduct?.id ?? 'new',
+                          ), // Key ensures rebuild on new product
+                          initialProduct: _editProduct,
+                          onSuccess: () =>
+                              setState(() => _activeKey = 'product_list'),
+                        ),
+                        const CategoriesManagementBody(),
+                        ReviewsPageBody(
+                          onProductTap: (product) {
+                            setState(() {
+                              _editProduct = product;
+                              _activeKey = 'add_products';
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],

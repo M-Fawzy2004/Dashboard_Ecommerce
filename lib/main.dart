@@ -46,16 +46,17 @@ class DashboardApp extends StatelessWidget {
         BlocProvider(create: (context) => AuthCubit()..checkAuth()),
         BlocProvider(create: (context) => ProductsCubit()..loadProducts()),
         BlocProvider(
-          create: (context) => CategoriesCubit(CategoriesRemoteDataSourceImpl())
-            ..loadCategories(),
+          create: (context) =>
+              CategoriesCubit(CategoriesRemoteDataSourceImpl())
+                ..loadCategories(),
         ),
         BlocProvider(
-          create: (context) => OrdersCubit(OrdersRemoteDataSourceImpl())
-            ..loadOrders(),
+          create: (context) =>
+              OrdersCubit(OrdersRemoteDataSourceImpl())..loadOrders(),
         ),
         BlocProvider(
-          create: (context) => ReviewsCubit(ReviewRemoteDataSourceImpl())
-            ..loadReviews(),
+          create: (context) =>
+              ReviewsCubit(ReviewRemoteDataSourceImpl())..loadReviews(),
         ),
       ],
       child: LayoutBuilder(
