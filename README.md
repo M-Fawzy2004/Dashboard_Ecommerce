@@ -48,16 +48,20 @@ Here is a glimpse of the meticulously designed interface:
   <img src="screenweb/2.png" width="800" alt="Products Grid">
   <br><em>Products Grid View - Glassmorphic Cards</em><br><br>
 
-  <img src="screenweb/3.png" width="800" alt="Product Details">
+  <img src="screenweb/4.png" width="800" alt="Product Details">
   <br><em>Rich Product Details & Image Gallery</em><br><br>
   
-  <img src="screenweb/4.png" width="800" alt="Categories Management">
+  <img src="screenweb/8.png" width="800" alt="Categories Management">
   <br><em>Categories Management & Statistics</em><br><br>
 
-  <img src="screenweb/5.png" width="800" alt="Add Category">
+  <img src="screenweb/13.png" width="800" alt="Add Category">
   <br><em>Add Custom Category Dialog</em><br><br>
 
-  <img src="screenweb/6.png" width="800" alt="Orders Table">
+  <img src="screenweb/16.png" width="800" alt="Orders Table">
+
+  <img src="screenweb/17.png" width="800" alt="Orders Table">
+
+  <img src="screenweb/19.png" width="800" alt="Orders Table">
   <br><em>Orders Management Table</em><br><br>
 </div>
 
@@ -73,32 +77,6 @@ Here is a glimpse of the meticulously designed interface:
 - **Responsiveness:** `flutter_screenutil` to ensure pixel-perfect rendering across standard desktop resolutions.
 - **Theming System:** Fully custom dark theme engine replacing standard Material components with tailored `BoxDecoration`, `LinearGradient`, and `BackdropFilter` rules.
 - **Routing:** Standard Flutter Navigator/Routes.
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Flutter SDK (Latest Stable)
-- Chrome / Edge browser for running web builds.
-
-### Installation
-1. Clone the repository:
-```bash
-git clone https://github.com/M-Fawzy2004/Dashboard_Ecommerce.git
-```
-2. Navigate to the directory:
-```bash
-cd Dashboard_Ecommerce
-```
-3. Install dependencies:
-```bash
-flutter pub get
-```
-4. Run the web application:
-```bash
-flutter run -d chrome
-```
 
 ---
 
