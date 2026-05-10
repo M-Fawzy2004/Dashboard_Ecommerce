@@ -1,8 +1,8 @@
+import 'package:dashboard_ecommerce/shared/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
 import '../model/product_model.dart';
-
 import '../widgets/product_details_dialog.dart';
 
 class ProductCard extends StatelessWidget {
@@ -39,135 +39,159 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasDiscount = product.originalPrice != null;
-    return InkWell(
+    return HoverButton(
       onTap: () => _showDetails(context),
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: 20.r,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: Colors.white.withOpacity(0.04)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image / Color placeholder
+            // Image Area
             Expanded(
               flex: 5,
-              child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: product.color.withValues(alpha: 0.05),
-                      ),
-                      child: product.mainImageUrl != null
-                          ? Center(
-                            child: Image.network(
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.02),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(12.r),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                        child: product.mainImageUrl != null
+                            ? Image.network(
                                 product.mainImageUrl!,
                                 fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => Center(
-                                  child: Icon(
-                                    _categoryIcon(product.category),
-                                    size: 32.sp,
-                                    color: product.color.withValues(alpha: 0.5),
-                                  ),
+                                errorBuilder: (context, error, stackTrace) => _CategoryPlaceholder(
+                                  category: product.category,
+                                  color: product.color,
                                 ),
+                              )
+                            : _CategoryPlaceholder(
+                                category: product.category,
+                                color: product.color,
                               ),
-                          )
-                          : Center(
-                              child: Icon(
-                                _categoryIcon(product.category),
-                                size: 48.sp,
-                                color: product.color.withValues(alpha: 0.5),
-                              ),
-                            ),
+                      ),
                     ),
-                    Positioned(
-                      top: 10.h,
-                      right: 10.w,
-                      child: _StatusBadge(status: product.status, color: _statusColor),
-                    ),
-                    if (hasDiscount)
-                      Positioned(
-                        top: 10.h,
-                        left: 10.w,
-                        child: _DiscountBadge(
-                          price: product.price,
-                          originalPrice: product.originalPrice!,
+                  ),
+                  // Gradient Overlay for better readability of badges
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.4),
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.2),
+                          ],
+                          stops: const [0.0, 0.2, 0.8, 1.0],
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12.h,
+                    right: 12.w,
+                    child: _StatusBadge(status: product.status, color: _statusColor),
+                  ),
+                  if (hasDiscount)
+                    Positioned(
+                      top: 12.h,
+                      left: 12.w,
+                      child: _DiscountBadge(
+                        price: product.price,
+                        originalPrice: product.originalPrice!,
+                      ),
+                    ),
+                ],
               ),
             ),
-            // Info
+            // Content Area
             Expanded(
               flex: 4,
               child: Padding(
-                padding: EdgeInsets.all(12.r),
+                padding: EdgeInsets.fromLTRB(14.w, 14.h, 14.w, 12.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       product.name,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                        height: 1.3,
+                        color: Colors.white,
+                        letterSpacing: 0.2,
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    Text(
-                      '${product.brand} · ${product.category}',
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: AppColors.textSecondary.withValues(alpha: 0.6),
-                      ),
+                    Row(
+                      children: [
+                        Icon(Icons.category_outlined, size: 10.sp, color: Colors.white.withOpacity(0.3)),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '${product.brand} · ${product.category}',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: Colors.white.withOpacity(0.3),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                     const Spacer(),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '\$${product.price.toStringAsFixed(0)}',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.primary,
-                                ),
-                              ),
                               if (hasDiscount)
                                 Text(
                                   '\$${product.originalPrice!.toStringAsFixed(0)}',
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     decoration: TextDecoration.lineThrough,
-                                    color: AppColors.textSecondary.withValues(alpha: 0.4),
+                                    color: Colors.white.withOpacity(0.2),
+                                    height: 1,
                                   ),
                                 ),
+                              Text(
+                                '\$${product.price.toStringAsFixed(0)}',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.primary,
+                                  height: 1.2,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         _StockIndicator(stock: product.stock, color: _statusColor),
                       ],
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: 14.h),
                     _CardActionRow(
                       onEdit: onEdit,
                       onDelete: () => _confirmDelete(context),
@@ -186,23 +210,64 @@ class ProductCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        title: const Text('Delete Product?'),
-        content: Text('Are you sure you want to delete "${product.name}"?'),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+          side: BorderSide(color: Colors.white.withOpacity(0.05)),
+        ),
+        title: Text(
+          'Delete Product?',
+          style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w800),
+        ),
+        content: Text(
+          'Are you sure you want to delete "${product.name}"? This action is permanent.',
+          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 13.sp),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text('Cancel', style: TextStyle(color: Colors.white.withOpacity(0.4))),
           ),
-          FilledButton(
-            onPressed: () {
+          HoverButton(
+            onTap: () {
               Navigator.pop(ctx);
               onDelete?.call();
             },
-            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Delete'),
+            borderRadius: 12.r,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                color: AppColors.error.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold, fontSize: 13.sp),
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CategoryPlaceholder extends StatelessWidget {
+  const _CategoryPlaceholder({required this.category, required this.color});
+  final String category;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: color.withOpacity(0.03),
+      child: Center(
+        child: Icon(
+          _categoryIcon(category),
+          size: 42.sp,
+          color: color.withOpacity(0.3),
+        ),
       ),
     );
   }
@@ -228,15 +293,15 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Text(
-        status,
-        style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w800, color: color),
+        status.toUpperCase(),
+        style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w900, color: color, letterSpacing: 0.5),
       ),
     );
   }
@@ -250,14 +315,17 @@ class _DiscountBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(8.r),
+        boxShadow: [
+          BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
       ),
       child: Text(
         '-${(((originalPrice - price) / originalPrice) * 100).toStringAsFixed(0)}%',
-        style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w800, color: Colors.white),
+        style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w900, color: Colors.white),
       ),
     );
   }
@@ -275,11 +343,11 @@ class _StockIndicator extends StatelessWidget {
       children: [
         Text(
           '$stock',
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: color),
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: Colors.white),
         ),
         Text(
-          'in stock',
-          style: TextStyle(fontSize: 9.sp, color: AppColors.textSecondary.withValues(alpha: 0.5)),
+          'UNIT',
+          style: TextStyle(fontSize: 8.sp, fontWeight: FontWeight.w800, color: color.withOpacity(0.6), letterSpacing: 1),
         ),
       ],
     );
@@ -296,39 +364,41 @@ class _CardActionRow extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: InkWell(
-            onTap: onEdit,
-            borderRadius: BorderRadius.circular(8.r),
+          child: HoverButton(
+            onTap: onEdit ?? () {},
+            borderRadius: 10.r,
             child: Container(
-              height: 30.h,
+              height: 34.h,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8.r),
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: Colors.white.withOpacity(0.05)),
               ),
               child: Center(
                 child: Text(
                   'Edit',
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: AppColors.primary),
+                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: Colors.white),
                 ),
               ),
             ),
           ),
         ),
-        SizedBox(width: 8.w),
-        InkWell(
-          onTap: onDelete,
-          borderRadius: BorderRadius.circular(8.r),
+        SizedBox(width: 10.w),
+        HoverButton(
+          onTap: onDelete ?? () {},
+          borderRadius: 10.r,
           child: Container(
-            width: 30.w,
-            height: 30.h,
+            width: 34.w,
+            height: 34.h,
             decoration: BoxDecoration(
-              color: AppColors.error.withValues(alpha: 0.07),
-              borderRadius: BorderRadius.circular(8.r),
+              color: AppColors.error.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: AppColors.error.withOpacity(0.1)),
             ),
             child: Icon(
               Icons.delete_outline_rounded,
-              size: 14.sp,
-              color: AppColors.error.withValues(alpha: 0.8),
+              size: 16.sp,
+              color: AppColors.error.withOpacity(0.6),
             ),
           ),
         ),

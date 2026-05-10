@@ -26,7 +26,8 @@ class ProductInventoryCard extends StatefulWidget {
     required String stockStatus,
     required String? sku,
     required bool isFeatured,
-  })? onChanged;
+  })?
+  onChanged;
 
   @override
   State<ProductInventoryCard> createState() => _ProductInventoryCardState();
@@ -43,7 +44,9 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
   @override
   void initState() {
     super.initState();
-    _stockCtrl = TextEditingController(text: widget.initialStockQty?.toString());
+    _stockCtrl = TextEditingController(
+      text: widget.initialStockQty?.toString(),
+    );
     _skuCtrl = TextEditingController(text: widget.initialSku);
     _unlimitedStock = widget.initialUnlimitedStock;
     _isFeatured = widget.initialIsFeatured;
@@ -73,101 +76,61 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
-              if (constraints.maxWidth < 600) {
-                return Column(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Stock Quantity'),
-                        _StockInput(
-                          controller: _stockCtrl,
-                          unlimited: _unlimitedStock,
-                          onToggle: (v) {
-                            setState(() => _unlimitedStock = v);
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
-                    AppSpacing.v16,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Stock Status'),
-                        _StatusSelector(
-                          currentStatus: _stockStatus,
-                          options: _statusOptions,
-                          onChanged: (v) {
-                            setState(() => _stockStatus = v);
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Stock Quantity'),
-                        _StockInput(
-                          controller: _stockCtrl,
-                          unlimited: _unlimitedStock,
-                          onToggle: (v) {
-                            setState(() => _unlimitedStock = v);
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
+              final isWide = constraints.maxWidth > 600;
+              final content = [
+                Expanded(
+                  flex: isWide ? 1 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ProductFormLabel('Stock Quantity'),
+                      _StockInput(
+                        controller: _stockCtrl,
+                        unlimited: _unlimitedStock,
+                        onToggle: (v) {
+                          setState(() => _unlimitedStock = v);
+                          _notify();
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Stock Status'),
-                        _StatusSelector(
-                          currentStatus: _stockStatus,
-                          options: _statusOptions,
-                          onChanged: (v) {
-                            setState(() => _stockStatus = v);
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
+                ),
+                if (!isWide) AppSpacing.v16 else SizedBox(width: 20.w),
+                Expanded(
+                  flex: isWide ? 1 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ProductFormLabel('Stock Status'),
+                      _StatusSelector(
+                        currentStatus: _stockStatus,
+                        options: _statusOptions,
+                        onChanged: (v) {
+                          setState(() => _stockStatus = v);
+                          _notify();
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              );
+                ),
+              ];
+              return isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: content,
+                    )
+                  : Column(children: content);
             },
           ),
           AppSpacing.v20,
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ProductFormLabel('SKU / Serial', isOptional: true),
-                    _SimpleInput(
-                      controller: _skuCtrl,
-                      hint: 'E.g. IPH-15-PRO-BLK',
-                      onChanged: (_) => _notify(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          const ProductFormLabel('SKU / Serial', isOptional: true),
+          _SimpleInput(
+            controller: _skuCtrl,
+            hint: 'e.g. IPH-15-PRO-BLK',
+            onChanged: (_) => _notify(),
           ),
           AppSpacing.v25,
-          Divider(height: 1, color: Colors.black.withValues(alpha: 0.05)),
+          Divider(height: 1, color: Colors.white.withOpacity(0.06)),
           AppSpacing.v20,
           _FeatureToggle(
             value: _isFeatured,
@@ -193,7 +156,11 @@ class _ProductInventoryCardState extends State<ProductInventoryCard> {
 }
 
 class _StockInput extends StatelessWidget {
-  const _StockInput({required this.controller, required this.unlimited, required this.onToggle});
+  const _StockInput({
+    required this.controller,
+    required this.unlimited,
+    required this.onToggle,
+  });
   final TextEditingController controller;
   final bool unlimited;
   final ValueChanged<bool> onToggle;
@@ -201,10 +168,11 @@ class _StockInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: Colors.white.withOpacity(0.03),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -212,31 +180,53 @@ class _StockInput extends StatelessWidget {
           Expanded(
             child: unlimited
                 ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
-                    child: Text('Unlimited Stock', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.success)),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Text(
+                      'Unlimited Stock',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.greenAccent.withOpacity(0.6),
+                      ),
+                    ),
                   )
                 : TextField(
                     controller: controller,
                     textAlignVertical: TextAlignVertical.center,
                     keyboardType: TextInputType.number,
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                       hintText: '0',
+                      hintStyle: TextStyle(color: Colors.white10),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 16.h,
+                      ),
                     ),
                   ),
           ),
-          Container(height: 30.h, width: 1, color: Colors.black12),
+          Container(
+            height: 24.h,
+            width: 1,
+            color: Colors.white.withOpacity(0.05),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
             child: Transform.scale(
-              scale: 0.8,
+              scale: 0.7,
               child: Switch(
                 value: unlimited,
                 onChanged: onToggle,
-                activeTrackColor: AppColors.success.withValues(alpha: 0.2),
-                activeThumbColor: AppColors.success,
+                activeTrackColor: AppColors.primary.withOpacity(0.3),
+                activeColor: AppColors.primary,
+                inactiveTrackColor: Colors.white.withOpacity(0.05),
+                inactiveThumbColor: Colors.white.withOpacity(0.2),
               ),
             ),
           ),
@@ -247,7 +237,11 @@ class _StockInput extends StatelessWidget {
 }
 
 class _StatusSelector extends StatelessWidget {
-  const _StatusSelector({required this.currentStatus, required this.options, required this.onChanged});
+  const _StatusSelector({
+    required this.currentStatus,
+    required this.options,
+    required this.onChanged,
+  });
   final String currentStatus;
   final List<Map<String, dynamic>> options;
   final ValueChanged<String> onChanged;
@@ -257,35 +251,77 @@ class _StatusSelector extends StatelessWidget {
     final active = options.firstWhere((o) => o['label'] == currentStatus);
     return PopupMenuButton<String>(
       onSelected: onChanged,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      color: AppColors.card,
+      elevation: 8,
+      offset: const Offset(0, 56),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        side: BorderSide(color: Colors.white.withOpacity(0.05)),
+      ),
       child: Container(
-        height: 60.h,
+        height: 52.h,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8F9FA),
+          color: Colors.white.withOpacity(0.03),
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
         ),
         child: Row(
           children: [
-            Container(width: 8.w, height: 8.h, decoration: BoxDecoration(color: active['color'] as Color, shape: BoxShape.circle)),
-            SizedBox(width: 10.w),
-            Expanded(child: Text(currentStatus, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700))),
-            Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black38, size: 20.sp),
+            Container(
+              width: 8.w,
+              height: 8.h,
+              decoration: BoxDecoration(
+                color: active['color'] as Color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                currentStatus,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.white.withOpacity(0.2),
+              size: 18.sp,
+            ),
           ],
         ),
       ),
       itemBuilder: (ctx) => options
-          .map((o) => PopupMenuItem(
-                value: o['label'] as String,
-                child: Row(
-                  children: [
-                    Container(width: 6.w, height: 6.h, decoration: BoxDecoration(color: o['color'] as Color, shape: BoxShape.circle)),
-                    SizedBox(width: 12.w),
-                    Text(o['label'] as String, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              ))
+          .map(
+            (o) => PopupMenuItem(
+              value: o['label'] as String,
+              child: Row(
+                children: [
+                  Container(
+                    width: 6.w,
+                    height: 6.h,
+                    decoration: BoxDecoration(
+                      color: o['color'] as Color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Text(
+                    o['label'] as String,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
           .toList(),
     );
   }
@@ -304,21 +340,30 @@ class _SimpleInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        color: Colors.white.withOpacity(0.03),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: TextField(
         controller: controller,
         onChanged: onChanged,
         textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(color: Colors.black26),
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.15)),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+          isCollapsed: true,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 16.h,
+          ),
         ),
       ),
     );
@@ -332,37 +377,58 @@ class _FeatureToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onChanged(!value),
-      borderRadius: BorderRadius.circular(12.r),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 4.h),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.r),
-              decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10.r)),
-              child: Icon(Icons.star_rounded, color: AppColors.primary, size: 20.sp),
-            ),
-            SizedBox(width: 14.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Featured Product', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                  Text('Display this product in your homepage highlights', style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary)),
-                ],
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(10.r),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Icon(
+            Icons.star_rounded,
+            color: Colors.amberAccent,
+            size: 20.sp,
+          ),
+        ),
+        SizedBox(width: 16.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Featured Product',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            Switch(
+              Text(
+                'Display this product in your homepage highlights',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: Colors.white.withOpacity(0.3),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 24.h,
+          child: Transform.scale(
+            scale: 0.7,
+            child: Switch(
               value: value,
               onChanged: onChanged,
-              activeTrackColor: AppColors.primary.withValues(alpha: 0.2),
-              activeThumbColor: AppColors.primary,
+              activeTrackColor: AppColors.primary.withOpacity(0.3),
+              activeColor: AppColors.primary,
+              inactiveTrackColor: Colors.white.withOpacity(0.05),
+              inactiveThumbColor: Colors.white.withOpacity(0.2),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

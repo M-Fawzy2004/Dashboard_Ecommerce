@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../shared/theme/app_colors.dart';
 
 class ProductsTable extends StatelessWidget {
@@ -19,26 +18,31 @@ class ProductsTable extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(18.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          headingRowColor: WidgetStateProperty.all(Colors.white.withOpacity(0.02)),
+          horizontalMargin: 20.w,
+          columnSpacing: 40.w,
           headingTextStyle: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w600,
+            color: Colors.white.withOpacity(0.3),
+            fontSize: 11.sp,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1,
           ),
-          dataTextStyle: TextStyle(color: AppColors.textPrimary, fontSize: 13.sp),
+          dataTextStyle: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.w500),
           columns: [
-            DataColumn(label: Text('sku'.tr())),
-            DataColumn(label: Text('products'.tr())),
-            DataColumn(label: Text('category'.tr())),
-            DataColumn(label: Text('stock'.tr())),
-            DataColumn(label: Text('price'.tr())),
+            DataColumn(label: Text('SKU'.toUpperCase())),
+            DataColumn(label: Text('PRODUCT NAME'.toUpperCase())),
+            DataColumn(label: Text('CATEGORY'.toUpperCase())),
+            DataColumn(label: Text('STOCK'.toUpperCase())),
+            DataColumn(label: Text('PRICE'.toUpperCase())),
           ],
           rows: items.map(_toDataRow).toList(),
         ),
@@ -50,20 +54,24 @@ class ProductsTable extends StatelessWidget {
     final stockColor = item.stock < 20 ? AppColors.warning : AppColors.success;
     return DataRow(
       cells: [
-        DataCell(Text(item.sku)),
+        DataCell(Text(item.sku, style: TextStyle(color: Colors.white.withOpacity(0.5)))),
         DataCell(Text(item.name)),
         DataCell(Text(item.categoryKey.tr())),
         DataCell(
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: stockColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(20.r),
+              color: stockColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: stockColor.withOpacity(0.2)),
             ),
-            child: Text('${item.stock}', style: TextStyle(color: AppColors.textPrimary)),
+            child: Text(
+              '${item.stock}', 
+              style: TextStyle(color: stockColor, fontWeight: FontWeight.w800, fontSize: 12.sp),
+            ),
           ),
         ),
-        DataCell(Text(item.price)),
+        DataCell(Text(item.price, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700))),
       ],
     );
   }

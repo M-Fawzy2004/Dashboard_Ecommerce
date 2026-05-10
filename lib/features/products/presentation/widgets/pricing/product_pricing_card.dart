@@ -20,7 +20,8 @@ class ProductPricingCard extends StatefulWidget {
     required double? price,
     required double? salePrice,
     required String currency,
-  })? onChanged;
+  })?
+  onChanged;
 
   @override
   State<ProductPricingCard> createState() => _ProductPricingCardState();
@@ -43,7 +44,9 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
   void initState() {
     super.initState();
     _priceCtrl = TextEditingController(text: widget.initialPrice?.toString());
-    _salePriceCtrl = TextEditingController(text: widget.initialSalePrice?.toString());
+    _salePriceCtrl = TextEditingController(
+      text: widget.initialSalePrice?.toString(),
+    );
     _selectedCurrency = _currencies.firstWhere(
       (c) => c['code'] == (widget.initialCurrency ?? 'USD'),
       orElse: () => _currencies[0],
@@ -73,14 +76,14 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
           ? Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.1),
+                color: Colors.greenAccent.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
                 '-${_discountPercent.toStringAsFixed(0)}% OFF',
                 style: TextStyle(
-                  color: AppColors.success,
-                  fontSize: 11.sp,
+                  color: Colors.greenAccent,
+                  fontSize: 10.sp,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -91,92 +94,65 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
-              if (constraints.maxWidth < 600) {
-                return Column(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Base Price'),
-                        _PriceInput(
-                          controller: _priceCtrl,
-                          currency: _selectedCurrency,
-                          onCurrencyTap: _showCurrencyPicker,
-                          onChanged: (_) {
-                            setState(() {});
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
-                    AppSpacing.v16,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Discounted Price', isOptional: true),
-                        _PriceInput(
-                          controller: _salePriceCtrl,
-                          currency: _selectedCurrency,
-                          hint: 'E.g. 899',
-                          isSale: true,
-                          onChanged: (_) {
-                            setState(() {});
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Base Price'),
-                        _PriceInput(
-                          controller: _priceCtrl,
-                          currency: _selectedCurrency,
-                          onCurrencyTap: _showCurrencyPicker,
-                          onChanged: (_) {
-                            setState(() {});
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
+              final isWide = constraints.maxWidth > 600;
+              final content = [
+                Expanded(
+                  flex: isWide ? 1 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ProductFormLabel('Base Price'),
+                      _PriceInput(
+                        controller: _priceCtrl,
+                        currency: _selectedCurrency,
+                        onCurrencyTap: _showCurrencyPicker,
+                        onChanged: (_) {
+                          setState(() {});
+                          _notify();
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const ProductFormLabel('Discounted Price', isOptional: true),
-                        _PriceInput(
-                          controller: _salePriceCtrl,
-                          currency: _selectedCurrency,
-                          hint: 'E.g. 899',
-                          isSale: true,
-                          onChanged: (_) {
-                            setState(() {});
-                            _notify();
-                          },
-                        ),
-                      ],
-                    ),
+                ),
+                if (!isWide) AppSpacing.v16 else SizedBox(width: 20.w),
+                Expanded(
+                  flex: isWide ? 1 : 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ProductFormLabel(
+                        'Discounted Price',
+                        isOptional: true,
+                      ),
+                      _PriceInput(
+                        controller: _salePriceCtrl,
+                        currency: _selectedCurrency,
+                        hint: 'e.g. 89.00',
+                        isSale: true,
+                        onChanged: (_) {
+                          setState(() {});
+                          _notify();
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              );
+                ),
+              ];
+
+              return isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: content,
+                    )
+                  : Column(children: content);
             },
           ),
           if (_discountPercent > 0) ...[
             AppSpacing.v16,
             _DiscountInfoBar(
               currencySymbol: _selectedCurrency['symbol']!,
-              discountAmount: (double.tryParse(_priceCtrl.text) ?? 0) -
+              discountAmount:
+                  (double.tryParse(_priceCtrl.text) ?? 0) -
                   (double.tryParse(_salePriceCtrl.text) ?? 0),
             ),
           ],
@@ -188,25 +164,61 @@ class _ProductPricingCardState extends State<ProductPricingCard> {
   void _showCurrencyPicker() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
+      backgroundColor: AppColors.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
       builder: (context) => Container(
         padding: EdgeInsets.all(24.r),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Select Currency', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800)),
-            AppSpacing.v16,
-            ..._currencies.map((c) => ListTile(
-                  leading: Text(c['flag']!, style: TextStyle(fontSize: 20.sp)),
-                  title: Text(c['code']!, style: TextStyle(fontWeight: FontWeight.w600)),
-                  trailing: _selectedCurrency == c ? Icon(Icons.check_circle, color: AppColors.primary) : null,
-                  onTap: () {
-                    setState(() => _selectedCurrency = c);
-                    _notify();
-                    Navigator.pop(context);
-                  },
-                )),
+            Text(
+              'Select Currency',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+            AppSpacing.v20,
+            ..._currencies.map(
+              (c) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 40.w,
+                  height: 40.h,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(c['flag']!, style: TextStyle(fontSize: 18.sp)),
+                ),
+                title: Text(
+                  c['code']!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontSize: 14.sp,
+                  ),
+                ),
+                trailing: _selectedCurrency == c
+                    ? Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.primary,
+                        size: 20.sp,
+                      )
+                    : null,
+                onTap: () {
+                  setState(() => _selectedCurrency = c);
+                  _notify();
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            SizedBox(height: 20.h),
           ],
         ),
       ),
@@ -242,10 +254,11 @@ class _PriceInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: Colors.white.withOpacity(0.03),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -253,21 +266,22 @@ class _PriceInput extends StatelessWidget {
           GestureDetector(
             onTap: onCurrencyTap,
             child: Container(
-              width: 65.w,
+              width: 50.w,
               margin: EdgeInsets.all(6.r),
-              padding: EdgeInsets.symmetric(vertical: 14.h),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.white.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(10.r),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 4)],
               ),
               child: Center(
                 child: Text(
                   currency['symbol']!,
                   style: TextStyle(
-                    fontSize: 15.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: isSale ? AppColors.success : AppColors.primary,
+                    color: isSale
+                        ? Colors.greenAccent
+                        : Colors.white.withOpacity(0.6),
                   ),
                 ),
               ),
@@ -278,13 +292,23 @@ class _PriceInput extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               textAlignVertical: TextAlignVertical.center,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
               decoration: InputDecoration(
+                isCollapsed: true,
                 hintText: hint,
-                hintStyle: TextStyle(fontSize: 14.sp, color: Colors.black26),
+                hintStyle: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.white.withOpacity(0.15),
+                ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
               ),
             ),
           ),
@@ -294,30 +318,39 @@ class _PriceInput extends StatelessWidget {
   }
 }
 
-
-
 class _DiscountInfoBar extends StatelessWidget {
-  const _DiscountInfoBar({required this.currencySymbol, required this.discountAmount});
+  const _DiscountInfoBar({
+    required this.currencySymbol,
+    required this.discountAmount,
+  });
   final String currencySymbol;
   final double discountAmount;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.r),
+      padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: AppColors.success.withValues(alpha: 0.05),
+        color: Colors.greenAccent.withOpacity(0.04),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.success.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.greenAccent.withOpacity(0.1)),
       ),
       child: Row(
         children: [
-          Icon(Icons.stars_rounded, color: AppColors.success, size: 16.sp),
-          SizedBox(width: 8.w),
+          Icon(
+            Icons.auto_awesome_rounded,
+            color: Colors.greenAccent,
+            size: 16.sp,
+          ),
+          SizedBox(width: 12.w),
           Expanded(
             child: Text(
               'Customers will save $currencySymbol${discountAmount.toStringAsFixed(2)} on this purchase',
-              style: TextStyle(fontSize: 12.sp, color: AppColors.success, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.greenAccent.withOpacity(0.8),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],

@@ -12,16 +12,24 @@ class OrdersTotalsRow extends StatelessWidget {
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         final totalCount = state.orders.length;
-        final newCount = state.orders.where((o) => 
-          o.status.toLowerCase() == 'pending' || 
-          o.status.toLowerCase() == 'confirmed').length;
-        final completedCount = state.orders.where((o) => o.status.toLowerCase() == 'delivered').length;
-        final cancelledCount = state.orders.where((o) => o.status.toLowerCase() == 'cancelled').length;
+        final newCount = state.orders
+            .where(
+              (o) =>
+                  o.status.toLowerCase() == 'pending' ||
+                  o.status.toLowerCase() == 'confirmed',
+            )
+            .length;
+        final completedCount = state.orders
+            .where((o) => o.status.toLowerCase() == 'delivered')
+            .length;
+        final cancelledCount = state.orders
+            .where((o) => o.status.toLowerCase() == 'cancelled')
+            .length;
 
         return LayoutBuilder(
           builder: (context, constraints) {
             final isMobile = constraints.maxWidth < 800;
-            
+
             final cards = [
               EnhancedKpiCard(
                 title: 'Total Orders',
@@ -60,9 +68,21 @@ class OrdersTotalsRow extends StatelessWidget {
             if (isMobile) {
               return Column(
                 children: [
-                  Row(children: [Expanded(child: cards[0]), AppSpacing.h15, Expanded(child: cards[1])]),
+                  Row(
+                    children: [
+                      Expanded(child: cards[0]),
+                      AppSpacing.h15,
+                      Expanded(child: cards[1]),
+                    ],
+                  ),
                   AppSpacing.v16,
-                  Row(children: [Expanded(child: cards[2]), AppSpacing.h15, Expanded(child: cards[3])]),
+                  Row(
+                    children: [
+                      Expanded(child: cards[2]),
+                      AppSpacing.h15,
+                      Expanded(child: cards[3]),
+                    ],
+                  ),
                 ],
               );
             }
@@ -84,4 +104,3 @@ class OrdersTotalsRow extends StatelessWidget {
     );
   }
 }
-

@@ -18,6 +18,7 @@ import '../widgets/product_specs_card.dart';
 import '../widgets/product_colors_card.dart';
 import '../widgets/add_product_action_buttons.dart';
 import '../widgets/product_images/product_image_models.dart';
+import '../../../../../shared/utils/app_snack_bar.dart';
 
 class AddProductPageBody extends StatefulWidget {
   const AddProductPageBody({super.key, this.initialProduct, this.onSuccess});
@@ -99,13 +100,9 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
           previous.actionInProgress && !current.actionInProgress,
       listener: (context, state) {
         if (state.error != null && state.error!.isNotEmpty) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.error!)));
+          AppSnackBar.showError(context, state.error!);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Product published successfully')),
-          );
+          AppSnackBar.showSuccess(context, 'Product published successfully');
         }
       },
       builder: (context, state) {
@@ -223,9 +220,7 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
 
   Future<void> _publish(BuildContext context) async {
     if (_name.trim().isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Product name is required')));
+      AppSnackBar.showError(context, 'Product name is required');
       return;
     }
 
@@ -271,12 +266,9 @@ class _AddProductPageBodyState extends State<AddProductPageBody> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Product ${_isEditing ? 'updated' : 'published'} successfully',
-          ),
-        ),
+      AppSnackBar.showSuccess(
+        context,
+        'Product ${_isEditing ? 'updated' : 'published'} successfully',
       );
       if (widget.onSuccess != null) {
         widget.onSuccess!();

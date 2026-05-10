@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 import 'common/product_form_section.dart';
 
@@ -29,18 +28,22 @@ class ProductShippingCard extends StatefulWidget {
     required double? heightCm,
     required String? weightUnit,
     required String? dimensionUnit,
-  })? onChanged;
+  })?
+  onChanged;
 
   @override
   State<ProductShippingCard> createState() => _ProductShippingCardState();
 }
 
 class _ProductShippingCardState extends State<ProductShippingCard> {
-  static const List<String> _weightUnits = [
-    'mg', 'g', 'kg', 'lb', 'oz', 'ton',
-  ];
+  static const List<String> _weightUnits = ['mg', 'g', 'kg', 'lb', 'oz', 'ton'];
   static const List<String> _dimensionUnits = [
-    'mm', 'cm', 'm', 'in', 'ft', 'yd',
+    'mm',
+    'cm',
+    'm',
+    'in',
+    'ft',
+    'yd',
   ];
 
   late final TextEditingController _weightCtrl;
@@ -53,10 +56,16 @@ class _ProductShippingCardState extends State<ProductShippingCard> {
   @override
   void initState() {
     super.initState();
-    _weightCtrl = TextEditingController(text: widget.initialWeightKg?.toString());
-    _lengthCtrl = TextEditingController(text: widget.initialLengthCm?.toString());
+    _weightCtrl = TextEditingController(
+      text: widget.initialWeightKg?.toString(),
+    );
+    _lengthCtrl = TextEditingController(
+      text: widget.initialLengthCm?.toString(),
+    );
     _widthCtrl = TextEditingController(text: widget.initialWidthCm?.toString());
-    _heightCtrl = TextEditingController(text: widget.initialHeightCm?.toString());
+    _heightCtrl = TextEditingController(
+      text: widget.initialHeightCm?.toString(),
+    );
     _weightUnit = widget.initialWeightUnit ?? 'kg';
     _dimensionUnit = widget.initialDimensionUnit ?? 'cm';
   }
@@ -84,8 +93,8 @@ class _ProductShippingCardState extends State<ProductShippingCard> {
                 'Product Weight',
                 style: TextStyle(
                   fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
               const Spacer(),
@@ -99,30 +108,30 @@ class _ProductShippingCardState extends State<ProductShippingCard> {
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
           _ShippingInput(
             controller: _weightCtrl,
             hint: '0.00',
             suffix: _weightUnit ?? 'kg',
             onChanged: (_) => _notify(),
           ),
-          AppSpacing.v20,
+          AppSpacing.v25,
           Row(
             children: [
               Text(
                 'Dimensions',
                 style: TextStyle(
                   fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
-              SizedBox(width: 6.w),
+              SizedBox(width: 8.w),
               Text(
                 '(optional)',
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: AppColors.textSecondary.withValues(alpha: 0.75),
+                  color: Colors.white.withOpacity(0.2),
                 ),
               ),
               const Spacer(),
@@ -136,7 +145,7 @@ class _ProductShippingCardState extends State<ProductShippingCard> {
               ),
             ],
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 12.h),
           Row(
             children: [
               Expanded(
@@ -170,7 +179,10 @@ class _ProductShippingCardState extends State<ProductShippingCard> {
           AppSpacing.v16,
           Text(
             'Used for product size details and logistics calculations.',
-            style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary.withValues(alpha: 0.6)),
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: Colors.white.withOpacity(0.25),
+            ),
           ),
         ],
       ),
@@ -203,10 +215,11 @@ class _UnitSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(3.r),
+      padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: Colors.white.withOpacity(0.03),
         borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -215,18 +228,22 @@ class _UnitSelector extends StatelessWidget {
           return GestureDetector(
             onTap: () => onChanged(option),
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
+              duration: const Duration(milliseconds: 200),
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: selected ? Colors.white : Colors.transparent,
-                borderRadius: BorderRadius.circular(8.r),
+                color: selected
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(7.r),
               ),
               child: Text(
                 option,
                 style: TextStyle(
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w700,
-                  color: selected ? AppColors.primary : AppColors.textSecondary,
+                  fontSize: 10.sp,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.3),
                 ),
               ),
             ),
@@ -252,10 +269,11 @@ class _ShippingInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: Colors.white.withOpacity(0.03),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -265,13 +283,20 @@ class _ShippingInput extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               textAlignVertical: TextAlignVertical.center,
-              keyboardType: TextInputType.number,
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
               decoration: InputDecoration(
+                isCollapsed: true,
                 hintText: hint,
-                hintStyle: const TextStyle(color: Colors.black26),
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.15)),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
               ),
             ),
           ),
@@ -279,7 +304,11 @@ class _ShippingInput extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Text(
               suffix,
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w800,
+                color: Colors.white.withOpacity(0.1),
+              ),
             ),
           ),
         ],

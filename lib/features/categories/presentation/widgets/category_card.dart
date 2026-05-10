@@ -30,20 +30,20 @@ class _CategoryCardState extends State<CategoryCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: _hovered
-                ? AppColors.primary.withValues(alpha: 0.3)
-                : Colors.black.withValues(alpha: 0.06),
+                ? AppColors.primary.withOpacity(0.3)
+                : Colors.white.withOpacity(0.04),
           ),
           boxShadow: [
             BoxShadow(
               color: _hovered
-                  ? AppColors.primary.withValues(alpha: 0.08)
-                  : Colors.black.withValues(alpha: 0.03),
-              blurRadius: _hovered ? 20 : 8,
-              offset: const Offset(0, 4),
+                  ? AppColors.primary.withOpacity(0.08)
+                  : Colors.black.withOpacity(0.2),
+              blurRadius: _hovered ? 20 : 15,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
@@ -69,8 +69,9 @@ class _CategoryCardState extends State<CategoryCard> {
             width: 44.w,
             height: 44.h,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.08),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: AppColors.primary.withOpacity(0.2)),
             ),
             child: Icon(widget.config.icon, size: 22.sp, color: AppColors.primary),
           ),
@@ -79,7 +80,7 @@ class _CategoryCardState extends State<CategoryCard> {
             widget.config.label,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: Colors.white),
           ),
           SizedBox(height: 4.h),
           Text(
@@ -87,7 +88,7 @@ class _CategoryCardState extends State<CategoryCard> {
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w600,
-              color: widget.isCustom ? AppColors.success : AppColors.textSecondary.withValues(alpha: 0.6),
+              color: widget.isCustom ? AppColors.success : Colors.white.withOpacity(0.4),
             ),
           ),
         ],
@@ -108,8 +109,9 @@ class _CategoryCardState extends State<CategoryCard> {
             width: 26.w,
             height: 26.h,
             decoration: BoxDecoration(
-              color: AppColors.error.withValues(alpha: 0.1),
+              color: AppColors.error.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: AppColors.error.withOpacity(0.2)),
             ),
             child: Icon(Icons.delete_outline_rounded, size: 14.sp, color: AppColors.error),
           ),
@@ -125,8 +127,9 @@ class _CategoryCardState extends State<CategoryCard> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
         decoration: BoxDecoration(
-          color: AppColors.success.withValues(alpha: 0.1),
+          color: AppColors.success.withOpacity(0.1),
           borderRadius: BorderRadius.circular(6.r),
+          border: Border.all(color: AppColors.success.withOpacity(0.2)),
         ),
         child: Text(
           'NEW',

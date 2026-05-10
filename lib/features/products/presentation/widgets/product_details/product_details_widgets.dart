@@ -12,8 +12,9 @@ class ProductCategoryTag extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
+        color: AppColors.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Text(
         label,
@@ -57,7 +58,11 @@ class ProductStockStatusTag extends StatelessWidget {
 }
 
 class ProductDiscountBadge extends StatelessWidget {
-  const ProductDiscountBadge({super.key, required this.original, required this.current});
+  const ProductDiscountBadge({
+    super.key,
+    required this.original,
+    required this.current,
+  });
   final double original;
   final double current;
 
@@ -98,20 +103,23 @@ class ProductSummaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 16.sp,
-          color: AppColors.textSecondary.withValues(alpha: 0.5),
-        ),
+        Icon(icon, size: 16.sp, color: Colors.white.withOpacity(0.2)),
         AppSpacing.h10,
         Text(
           label,
-          style: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary),
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: Colors.white.withOpacity(0.4),
+          ),
         ),
         const Spacer(),
         Text(
           value,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
         ),
       ],
     );
@@ -127,7 +135,7 @@ class ProductDetailsHeader extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Colors.black.withValues(alpha: 0.05)),
+          bottom: BorderSide(color: Colors.white.withOpacity(0.05)),
         ),
       ),
       child: Row(
@@ -135,7 +143,7 @@ class ProductDetailsHeader extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(8.r),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Icon(
@@ -147,15 +155,19 @@ class ProductDetailsHeader extends StatelessWidget {
           AppSpacing.h12,
           Text(
             'Product Details',
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
           ),
           const Spacer(),
           IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close_rounded),
             style: IconButton.styleFrom(
-              backgroundColor: Colors.black.withValues(alpha: 0.04),
-              foregroundColor: AppColors.textSecondary,
+              backgroundColor: Colors.white.withOpacity(0.04),
+              foregroundColor: Colors.white.withOpacity(0.5),
             ),
           ),
         ],
@@ -178,17 +190,8 @@ class ProductDetailsBottomActions extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(28.w, 20.h, 28.w, 32.h),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.black.withValues(alpha: 0.05)),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
+        color: AppColors.card,
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05))),
       ),
       child: Row(
         children: [
@@ -199,7 +202,7 @@ class ProductDetailsBottomActions extends StatelessWidget {
               label: const Text('Delete'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.error,
-                side: BorderSide(color: AppColors.error.withValues(alpha: 0.3)),
+                side: BorderSide(color: AppColors.error.withOpacity(0.3)),
                 padding: EdgeInsets.symmetric(vertical: 18.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14.r),
@@ -234,10 +237,12 @@ class ProductDetailsImageGallery extends StatefulWidget {
   final List<String> images;
 
   @override
-  State<ProductDetailsImageGallery> createState() => _ProductDetailsImageGalleryState();
+  State<ProductDetailsImageGallery> createState() =>
+      _ProductDetailsImageGalleryState();
 }
 
-class _ProductDetailsImageGalleryState extends State<ProductDetailsImageGallery> {
+class _ProductDetailsImageGalleryState
+    extends State<ProductDetailsImageGallery> {
   int _activeIndex = 0;
 
   @override
@@ -247,17 +252,18 @@ class _ProductDetailsImageGalleryState extends State<ProductDetailsImageGallery>
         Container(
           height: 320.h,
           width: double.infinity,
-          padding: EdgeInsets.all(20.r),
+          padding: EdgeInsets.all(24.r),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FA),
+            color: Colors.white.withOpacity(0.02),
             borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
           child: widget.images.isNotEmpty
               ? Image.network(widget.images[_activeIndex], fit: BoxFit.contain)
               : Icon(
                   Icons.image_outlined,
                   size: 60.sp,
-                  color: Colors.grey.shade300,
+                  color: Colors.white.withOpacity(0.05),
                 ),
         ),
         if (widget.images.length > 1) ...[
@@ -273,18 +279,20 @@ class _ProductDetailsImageGalleryState extends State<ProductDetailsImageGallery>
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   width: 60.w,
+                  padding: EdgeInsets.all(4.r),
                   decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.02),
                     borderRadius: BorderRadius.circular(10.r),
                     border: Border.all(
                       color: _activeIndex == index
                           ? AppColors.primary
-                          : Colors.transparent,
+                          : Colors.white.withOpacity(0.05),
                       width: 2,
                     ),
-                    image: DecorationImage(
-                      image: NetworkImage(widget.images[index]),
-                      fit: BoxFit.cover,
-                    ),
+                  ),
+                  child: Image.network(
+                    widget.images[index],
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),

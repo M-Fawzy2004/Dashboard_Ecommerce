@@ -1,5 +1,4 @@
-// ignore_for_file: deprecated_member_use
-
+import 'package:dashboard_ecommerce/shared/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../shared/theme/app_colors.dart';
@@ -64,7 +63,6 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
         );
       }
     } else {
-      // Default initial colors for new products
       final defaults = {'White', 'Black', 'Blue', 'Orange'};
       for (final color in defaults) {
         _selected.add(color);
@@ -92,11 +90,12 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
           Text(
             'Choose colors, then set quantity per color or mark it as unlimited',
             style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.textSecondary.withValues(alpha: 0.8),
+              fontSize: 13.sp,
+              color: Colors.white.withOpacity(0.3),
+              fontWeight: FontWeight.w400,
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 16.h),
           Wrap(
             spacing: 10.w,
             runSpacing: 10.h,
@@ -109,21 +108,21 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
               );
             }).toList(),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
           if (_selected.isEmpty)
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+              padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
+                color: Colors.white.withOpacity(0.02),
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+                border: Border.all(color: Colors.white.withOpacity(0.05)),
               ),
               child: Text(
                 'No colors selected yet.',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: AppColors.textSecondary.withValues(alpha: 0.8),
+                  color: Colors.white.withOpacity(0.2),
                 ),
               ),
             )
@@ -133,7 +132,7 @@ class _ProductColorsCardState extends State<ProductColorsCard> {
                 final option = _allColors.firstWhere((o) => o.name == name);
                 final config = _colorStock.putIfAbsent(name, _ColorStockConfig.new);
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 10.h),
+                  padding: EdgeInsets.only(bottom: 12.h),
                   child: _ColorStockRow(
                     option: option,
                     config: config,
@@ -181,20 +180,17 @@ class _ColorChoiceChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return HoverButton(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(999.r),
+      borderRadius: 999.r,
+      active: selected,
+      activeColor: Colors.white.withOpacity(0.08),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: selected
-              ? AppColors.primary.withValues(alpha: 0.10)
-              : const Color(0xFFF8F9FA),
           borderRadius: BorderRadius.circular(999.r),
           border: Border.all(
-            color: selected
-                ? AppColors.primary
-                : Colors.black.withValues(alpha: 0.08),
+            color: selected ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.04),
           ),
         ),
         child: Row(
@@ -206,22 +202,18 @@ class _ColorChoiceChip extends StatelessWidget {
               decoration: BoxDecoration(
                 color: option.color,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.black.withValues(alpha: 0.15)),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: 10.w),
             Text(
               option.name,
               style: TextStyle(
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? Colors.white : Colors.white.withOpacity(0.35),
               ),
             ),
-            if (selected) ...[
-              SizedBox(width: 6.w),
-              Icon(Icons.check_circle, size: 14.sp, color: AppColors.primary),
-            ],
           ],
         ),
       ),
@@ -236,8 +228,7 @@ class _ColorOption {
 }
 
 class _ColorStockConfig {
-  _ColorStockConfig({String qty = '0', this.unlimited = false})
-      : qtyCtrl = TextEditingController(text: qty);
+  _ColorStockConfig({String qty = '0', this.unlimited = false}) : qtyCtrl = TextEditingController(text: qty);
 
   final TextEditingController qtyCtrl;
   bool unlimited;
@@ -261,61 +252,65 @@ class _ColorStockRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10.r),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        color: Colors.white.withOpacity(0.02),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
       ),
       child: Row(
         children: [
           Container(
-            width: 16.w,
-            height: 16.h,
+            width: 18.w,
+            height: 18.h,
             decoration: BoxDecoration(
               color: option.color,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.black.withValues(alpha: 0.2)),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
           ),
-          SizedBox(width: 8.w),
-          SizedBox(
-            width: 70.w,
+          SizedBox(width: 12.w),
+          Expanded(
             child: Text(
               option.name,
               style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
             ),
           ),
-          const Spacer(),
           Text(
             'Unlimited',
             style: TextStyle(
               fontSize: 11.sp,
-              color: AppColors.textSecondary.withValues(alpha: 0.9),
-            ),
-          ),
-          SizedBox(width: 6.w),
-          Transform.scale(
-            scale: 0.8,
-            child: Switch(
-              value: config.unlimited,
-              onChanged: onUnlimitedChanged,
-              activeTrackColor: AppColors.success.withValues(alpha: 0.2),
-              activeThumbColor: AppColors.success,
+              color: Colors.white.withOpacity(0.2),
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(width: 8.w),
+          SizedBox(
+            height: 24.h,
+            child: Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                value: config.unlimited,
+                onChanged: onUnlimitedChanged,
+                activeTrackColor: AppColors.primary.withOpacity(0.3),
+                activeColor: AppColors.primary,
+                inactiveTrackColor: Colors.white.withOpacity(0.05),
+                inactiveThumbColor: Colors.white.withOpacity(0.2),
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
           Container(
-            width: 92.w,
-            height: 42.h,
+            width: 80.w,
+            height: 38.h,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.03),
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+              border: Border.all(color: Colors.white.withOpacity(0.05)),
             ),
             child: TextField(
               controller: config.qtyCtrl,
@@ -323,12 +318,17 @@ class _ColorStockRow extends StatelessWidget {
               enabled: !config.unlimited,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
-              decoration: InputDecoration(
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+                color: config.unlimited ? Colors.white.withOpacity(0.1) : Colors.white,
+              ),
+              decoration: const InputDecoration(
                 hintText: '0',
+                hintStyle: TextStyle(color: Colors.white10),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                contentPadding: EdgeInsets.zero,
               ),
             ),
           ),

@@ -65,11 +65,12 @@ class _ProductDetailsDialogState extends State<ProductDetailsDialog> {
           width: 500.w,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.card,
             borderRadius: BorderRadius.horizontal(left: Radius.circular(24.r)),
+            border: Border(left: BorderSide(color: Colors.white.withOpacity(0.05))),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: Colors.black.withOpacity(0.2),
                 blurRadius: 40,
                 offset: const Offset(-10, 0),
               ),

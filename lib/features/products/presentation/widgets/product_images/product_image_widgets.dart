@@ -1,6 +1,6 @@
+import 'package:dashboard_ecommerce/shared/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../shared/theme/app_colors.dart';
 import 'product_image_models.dart';
 
 class MainImageUploadCard extends StatelessWidget {
@@ -23,92 +23,112 @@ class MainImageUploadCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7F7F7),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.07)),
-      ),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: mainImage == null ? onBrowse : null,
-            child: Container(
-              height: 220.h,
-              width: 220.w,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Colors.black.withValues(alpha: 0.07)),
-              ),
-              child: mainImage != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(11.r),
-                      child: ImagePreview(item: mainImage!, fit: BoxFit.contain),
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: mainImage == null ? onBrowse : null,
+          child: Container(
+            height: 240.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.02),
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: Colors.white.withOpacity(0.04)),
+            ),
+            child: mainImage != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15.r),
+                    child: Stack(
                       children: [
-                        Icon(
-                          Icons.image_outlined,
-                          size: 28.sp,
-                          color: AppColors.textSecondary.withValues(alpha: 0.4),
-                        ),
-                        SizedBox(height: 6.h),
-                        Text(
-                          'No image',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            color: AppColors.textSecondary.withValues(alpha: 0.4),
+                        Positioned.fill(child: ImagePreview(item: mainImage!, fit: BoxFit.contain)),
+                        Positioned(
+                          top: 12.h,
+                          right: 12.w,
+                          child: HoverButton(
+                            onTap: onReplace,
+                            borderRadius: 10.r,
+                            child: Container(
+                              padding: EdgeInsets.all(8.r),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Icon(Icons.sync_outlined, size: 16.sp, color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
                     ),
-            ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_photo_alternate_outlined,
+                        size: 32.sp,
+                        color: Colors.white.withOpacity(0.1),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'Click to upload main image',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: Colors.white.withOpacity(0.2),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
-          SizedBox(height: 12.h),
-          Row(
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Text(
+              'GALLERY IMAGES',
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.2),
+                letterSpacing: 1.5,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              '${thumbImages.length}/5',
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.2),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: 100.h,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             children: [
-              ImageActionButton(
-                icon: Icons.folder_open_outlined,
-                label: 'Browse',
-                onTap: onBrowse,
-              ),
-              const Spacer(),
-              ImageActionButton(
-                icon: Icons.sync_outlined,
-                label: 'Replace',
-                onTap: onReplace,
-              ),
+              ...List.generate(thumbImages.length, (i) {
+                return Padding(
+                  padding: EdgeInsets.only(right: 12.w),
+                  child: SizedBox(
+                    width: 100.w,
+                    child: ThumbImageTile(
+                      imageItem: thumbImages[i],
+                      onRemove: () => onRemoveThumb(i),
+                    ),
+                  ),
+                );
+              }),
+              if (thumbImages.length < 5)
+                SizedBox(width: 100.w, child: AddThumbTile(onTap: onAddThumb)),
             ],
           ),
-          SizedBox(height: 12.h),
-          SizedBox(
-            height: 92.h,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                ...List.generate(thumbImages.length, (i) {
-                  return Padding(
-                    padding: EdgeInsets.only(right: 8.w),
-                    child: SizedBox(
-                      width: 92.w,
-                      child: ThumbImageTile(
-                        imageItem: thumbImages[i],
-                        onRemove: () => onRemoveThumb(i),
-                      ),
-                    ),
-                  );
-                }),
-                if (thumbImages.length < 5)
-                  SizedBox(width: 92.w, child: AddThumbTile(onTap: onAddThumb)),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -129,28 +149,41 @@ class SourceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return HoverButton(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10.r),
+      borderRadius: 12.r,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(12.r),
+        padding: EdgeInsets.all(14.r),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+          color: Colors.white.withOpacity(0.03),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18.sp, color: AppColors.primary),
-            SizedBox(width: 10.w),
+            Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(icon, size: 18.sp, color: Colors.white.withOpacity(0.6)),
+            ),
+            SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700)),
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: Colors.white),
+                  ),
                   SizedBox(height: 2.h),
-                  Text(subtitle, style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary.withValues(alpha: 0.9))),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 11.sp, color: Colors.white.withOpacity(0.3)),
+                  ),
                 ],
               ),
             ),
@@ -161,51 +194,44 @@ class SourceTile extends StatelessWidget {
   }
 }
 
-class ImageActionButton extends StatelessWidget {
-  const ImageActionButton({super.key, required this.icon, required this.label, required this.onTap});
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.r),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8.r),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r), border: Border.all(color: Colors.black.withValues(alpha: 0.10))),
-            child: Row(children: [Icon(icon, size: 14.sp, color: AppColors.textSecondary), SizedBox(width: 6.w), Text(label, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500))]),
-          ),
-        ),
-      );
-}
-
 class ThumbImageTile extends StatelessWidget {
   const ThumbImageTile({super.key, required this.imageItem, required this.onRemove});
   final ProductImageItem imageItem;
   final VoidCallback onRemove;
+
   @override
   Widget build(BuildContext context) => Container(
-        padding: EdgeInsets.all(5.r),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r), border: Border.all(color: Colors.black.withValues(alpha: 0.08))),
-        child: Stack(children: [
-          Positioned.fill(child: ClipRRect(borderRadius: BorderRadius.circular(7.r), child: ImagePreview(item: imageItem))),
-          Positioned(
-            top: -4.h,
-            right: -4.w,
-            child: GestureDetector(
-              onTap: onRemove,
-              child: Container(
-                width: 16.w,
-                height: 16.h,
-                decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: Colors.black.withValues(alpha: 0.10))),
-                child: Icon(Icons.close, size: 9.sp, color: AppColors.textSecondary),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.02),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+        ),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(11.r),
+                child: ImagePreview(item: imageItem),
               ),
             ),
-          ),
-        ]),
+            Positioned(
+              top: 4.h,
+              right: 4.w,
+              child: GestureDetector(
+                onTap: onRemove,
+                child: Container(
+                  width: 20.w,
+                  height: 20.h,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.close, size: 12.sp, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       );
 }
 
@@ -213,6 +239,7 @@ class ImagePreview extends StatelessWidget {
   const ImagePreview({super.key, required this.item, this.fit = BoxFit.cover});
   final ProductImageItem item;
   final BoxFit fit;
+
   @override
   Widget build(BuildContext context) {
     if (item.bytes != null) return Image.memory(item.bytes!, fit: fit);
@@ -220,11 +247,11 @@ class ImagePreview extends StatelessWidget {
       item.url!,
       fit: fit,
       errorBuilder: (_, _, _) => Container(
-        color: const Color(0xFFF1F1F1),
+        color: Colors.white.withOpacity(0.05),
         alignment: Alignment.center,
         child: Icon(
           Icons.broken_image_outlined,
-          color: AppColors.textSecondary.withValues(alpha: 0.5),
+          color: Colors.white.withOpacity(0.1),
         ),
       ),
     );
@@ -234,23 +261,34 @@ class ImagePreview extends StatelessWidget {
 class AddThumbTile extends StatelessWidget {
   const AddThumbTile({super.key, required this.onTap});
   final VoidCallback onTap;
+
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => HoverButton(
         onTap: onTap,
+        borderRadius: 12.r,
         child: Container(
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r), border: Border.all(color: Colors.black.withValues(alpha: 0.12))),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.02),
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.05),
+              style: BorderStyle.solid,
+            ),
+          ),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 20.w,
-                  height: 20.h,
-                  decoration: const BoxDecoration(color: Color(0xFFE8F5E9), shape: BoxShape.circle),
-                  child: Icon(Icons.add, size: 13.sp, color: const Color(0xFF388E3C)),
+                Icon(Icons.add_rounded, size: 24.sp, color: Colors.white.withOpacity(0.2)),
+                SizedBox(height: 4.h),
+                Text(
+                  'Add',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withOpacity(0.2),
+                  ),
                 ),
-                SizedBox(height: 5.h),
-                Text('Add image', style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w500, color: const Color(0xFF388E3C))),
               ],
             ),
           ),

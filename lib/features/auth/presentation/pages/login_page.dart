@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../shared/theme/app_colors.dart';
+import '../../../../shared/utils/app_snack_bar.dart';
 import '../cubit/auth_cubit.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,12 +32,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushReplacementNamed(context, '/dashboard');
           }
           if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppSnackBar.showError(context, state.message);
           }
         },
         child: Row(

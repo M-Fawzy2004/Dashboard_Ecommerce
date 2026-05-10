@@ -63,9 +63,10 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
         constraints: BoxConstraints(maxWidth: 480.w),
         padding: EdgeInsets.all(28.r),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(24.r),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 40, offset: const Offset(0, 20))],
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 40, offset: const Offset(0, 20))],
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -93,20 +94,20 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
       children: [
         Container(
           width: 40.w, height: 40.h,
-          decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12.r)),
+          decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), borderRadius: BorderRadius.circular(12.r), border: Border.all(color: AppColors.primary.withOpacity(0.2))),
           child: Icon(Icons.add_rounded, color: AppColors.primary, size: 20.sp),
         ),
         SizedBox(width: 12.w),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('New Category', style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w800)),
-            Text('Add a custom product category', style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary)),
+            Text('New Category', style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w800, color: Colors.white)),
+            Text('Add a custom product category', style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.4))),
           ]),
         ),
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close_rounded),
-          style: IconButton.styleFrom(foregroundColor: AppColors.textSecondary),
+          style: IconButton.styleFrom(foregroundColor: Colors.white.withOpacity(0.5)),
         ),
       ],
     );
@@ -116,19 +117,19 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Category Name', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700)),
+        Text('Category Name', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: Colors.white)),
         SizedBox(height: 8.h),
         TextField(
           controller: _nameCtrl,
           textAlignVertical: TextAlignVertical.center,
-          style: TextStyle(fontSize: 14.sp),
+          style: TextStyle(fontSize: 14.sp, color: Colors.white),
           decoration: InputDecoration(
             hintText: 'e.g. Garden & Outdoor',
-            hintStyle: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary.withValues(alpha: 0.45)),
+            hintStyle: TextStyle(fontSize: 13.sp, color: Colors.white.withOpacity(0.3)),
             filled: true,
-            fillColor: const Color(0xFFF8F9FA),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.08))),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.08))),
+            fillColor: Colors.white.withOpacity(0.02),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide(color: Colors.white.withOpacity(0.05))),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide(color: Colors.white.withOpacity(0.05))),
             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide(color: AppColors.primary, width: 1.5)),
             contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           ),
@@ -141,14 +142,14 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choose Icon', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700)),
+        Text('Choose Icon', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: Colors.white)),
         SizedBox(height: 10.h),
         Container(
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FA),
+            color: Colors.white.withOpacity(0.01),
             borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+            border: Border.all(color: Colors.white.withOpacity(0.04)),
           ),
           child: Wrap(
             spacing: 8.w,
@@ -161,12 +162,12 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                   duration: const Duration(milliseconds: 160),
                   width: 38.w, height: 38.h,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : Colors.white,
+                    color: isSelected ? AppColors.primary.withOpacity(0.15) : Colors.white.withOpacity(0.03),
                     borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: isSelected ? AppColors.primary : Colors.black.withValues(alpha: 0.08)),
-                    boxShadow: isSelected ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.25), blurRadius: 8)] : null,
+                    border: Border.all(color: isSelected ? AppColors.primary.withOpacity(0.5) : Colors.white.withOpacity(0.05)),
+                    boxShadow: isSelected ? [BoxShadow(color: AppColors.primary.withOpacity(0.2), blurRadius: 8)] : null,
                   ),
-                  child: Icon(icon, size: 18.sp, color: isSelected ? Colors.white : AppColors.textSecondary),
+                  child: Icon(icon, size: 18.sp, color: isSelected ? AppColors.primary : Colors.white.withOpacity(0.4)),
                 ),
               );
             }).toList(),
@@ -180,7 +181,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Product Fields', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700)),
+        Text('Product Fields', style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: Colors.white)),
         SizedBox(height: 10.h),
         Wrap(
           spacing: 10.w,
@@ -202,8 +203,8 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
           child: OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-              side: BorderSide(color: Colors.black.withValues(alpha: 0.12)),
+              foregroundColor: Colors.white.withOpacity(0.7),
+              side: BorderSide(color: Colors.white.withOpacity(0.1)),
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
             ),

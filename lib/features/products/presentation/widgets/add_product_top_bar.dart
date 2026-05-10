@@ -1,6 +1,6 @@
+import 'package:dashboard_ecommerce/shared/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../shared/theme/app_colors.dart';
 
 class AddProductTopBar extends StatelessWidget {
   const AddProductTopBar({super.key});
@@ -15,16 +15,20 @@ class AddProductTopBar extends StatelessWidget {
             Text(
               'Add New Product',
               style: TextStyle(
-                fontSize: 22.sp,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: Colors.white,
                 letterSpacing: -0.5,
               ),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 4.h),
             Text(
               'Fill in the details to list a new product',
-              style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: Colors.white.withOpacity(0.35),
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         );
@@ -34,7 +38,7 @@ class AddProductTopBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               titleBlock,
-              SizedBox(height: 16.h),
+              SizedBox(height: 20.h),
               SizedBox(
                 width: double.infinity,
                 child: _PublishButton(),
@@ -58,20 +62,31 @@ class AddProductTopBar extends StatelessWidget {
 class _PublishButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {},
-      icon: Icon(Icons.rocket_launch_rounded, size: 16.sp),
-      label: Text(
-        'Publish',
-        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
+    return HoverButton(
+      onTap: () {},
+      borderRadius: 12.r,
+      active: true,
+      activeColor: Colors.white.withOpacity(0.08),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.white.withOpacity(0.12)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.rocket_launch_rounded, size: 16.sp, color: Colors.white),
+            SizedBox(width: 10.w),
+            Text(
+              'Publish Product',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );

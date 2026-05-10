@@ -19,10 +19,10 @@ class _SideNavState extends State<SideNav> {
   Widget build(BuildContext context) {
     return Container(
       width: 260.w,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xFF0A0A0F),
         border: Border(right: BorderSide(color: Color(0xFF1C1C24))),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(25.r)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,14 +235,14 @@ class _SideNavTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: HoverButton(
         onTap: onTap,
-        borderRadius: 25,
+        borderRadius: 16,
         active: active,
         activeColor: Colors.white.withOpacity(0.07),
         child: Container(
           height: 44,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(16),
             border: active
                 ? Border.all(color: Colors.white.withOpacity(0.08))
                 : null,
@@ -310,8 +310,6 @@ class _UserAvatar extends StatelessWidget {
     );
   }
 }
-
-
 
 class _NavItem {
   const _NavItem(this.icon, this.label, this.key);

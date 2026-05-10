@@ -1,8 +1,8 @@
+import 'package:dashboard_ecommerce/shared/widgets/hover_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../features/categories/presentation/cubit/categories_cubit.dart';
-import '../../../../../shared/theme/app_colors.dart';
 import '../../../../../shared/theme/app_spacing.dart';
 import '../model/category_config.dart';
 import 'common/product_form_section.dart';
@@ -25,12 +25,14 @@ class ProductCategorySelectorCard extends StatelessWidget {
       child: BlocBuilder<CategoriesCubit, CategoriesState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: CircularProgressIndicator(),
-            ));
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(40.r),
+                child: const CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              ),
+            );
           }
-          
+
           final categories = state.categories;
 
           return Column(
@@ -39,23 +41,26 @@ class ProductCategorySelectorCard extends StatelessWidget {
               Text(
                 'Choose a category to see the relevant fields for your product.',
                 style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.textSecondary.withValues(alpha: 0.6),
+                  fontSize: 13.sp,
+                  color: Colors.white.withOpacity(0.3),
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              AppSpacing.v16,
+              AppSpacing.v20,
               if (categories.isEmpty)
-                Text('No categories found. Add one in the Categories section.', 
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.error))
+                Text(
+                  'No categories found. Add one in the Categories section.',
+                  style: TextStyle(fontSize: 12.sp, color: Colors.redAccent.withOpacity(0.6)),
+                )
               else
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 90.w,
-                    crossAxisSpacing: 10.w,
-                    mainAxisSpacing: 10.h,
-                    childAspectRatio: 1.1,
+                    maxCrossAxisExtent: 100.w,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,
+                    childAspectRatio: 1.0,
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
@@ -69,7 +74,7 @@ class ProductCategorySelectorCard extends StatelessWidget {
                   },
                 ),
               if (selectedConfig != null) ...[
-                AppSpacing.v16,
+                AppSpacing.v20,
                 _ActiveCategoryBadge(config: selectedConfig!),
               ],
             ],
@@ -93,49 +98,36 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return HoverButton(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(14.r),
+      borderRadius: 14.r,
+      active: isSelected,
+      activeColor: Colors.white.withOpacity(0.08),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : const Color(0xFFF8F9FA),
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : Colors.black.withValues(alpha: 0.05),
-            width: isSelected ? 2 : 1,
+            color: isSelected ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.04),
+            width: isSelected ? 1.2 : 1,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.2),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               config.icon,
-              size: 18.sp,
-              color: isSelected
-                  ? Colors.white
-                  : AppColors.primary.withValues(alpha: 0.8),
+              size: 20.sp,
+              color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 8.h),
             Text(
               config.label.split(' ').first,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 9.sp,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? Colors.white : AppColors.textPrimary,
+                fontSize: 10.sp,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? Colors.white : Colors.white.withOpacity(0.35),
               ),
             ),
           ],
@@ -151,32 +143,50 @@ class _ActiveCategoryBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 250),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.06),
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
-        ),
-        child: Row(
-          children: [
-            Icon(config.icon, size: 16.sp, color: AppColors.primary),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: Text(
-                config.label,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                ),
-              ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.03),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              shape: BoxShape.circle,
             ),
-            _ActiveFeatureChips(config: config),
-          ],
-        ),
+            child: Icon(config.icon, size: 16.sp, color: Colors.white.withOpacity(0.6)),
+          ),
+          SizedBox(width: 14.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Selected Category',
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withOpacity(0.25),
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                Text(
+                  config.label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _ActiveFeatureChips(config: config),
+        ],
       ),
     );
   }
@@ -199,22 +209,22 @@ class _ActiveFeatureChips extends StatelessWidget {
     if (config.showMaterial) features.add('Material');
 
     return Wrap(
-      spacing: 4.w,
+      spacing: 6.w,
       children: features
-          .take(4)
+          .take(3)
           .map((f) => Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                  border: Border.all(color: Colors.white.withOpacity(0.05)),
                 ),
                 child: Text(
                   f,
                   style: TextStyle(
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withOpacity(0.5),
                   ),
                 ),
               ))

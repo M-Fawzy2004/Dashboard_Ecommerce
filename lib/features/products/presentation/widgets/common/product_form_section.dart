@@ -21,17 +21,11 @@ class ProductFormSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.r),
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,36 +33,31 @@ class ProductFormSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 40.w,
-                height: 40.h,
+                width: 36.w,
+                height: 36.h,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(icon, size: 20.sp, color: AppColors.primary),
+                child: Icon(icon, size: 18.sp, color: Colors.white.withOpacity(0.4)),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.5,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              ?trailing,
+              if (trailing != null) trailing!,
             ],
           ),
           SizedBox(height: 20.h),
-          Divider(
-            height: 1,
-            thickness: 1,
-            color: Colors.black.withValues(alpha: 0.04),
-          ),
-          SizedBox(height: 24.h),
+          Divider(color: Colors.white.withOpacity(0.06), height: 1),
+          SizedBox(height: 20.h),
           child,
         ],
       ),
@@ -84,28 +73,31 @@ class ProductFormLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
-      child: RichText(
-        text: TextSpan(
-          text: text,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF0F3D3E),
-            fontFamily: 'Inter',
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Row(
+        children: [
+          Text(
+            text.toUpperCase(),
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.white.withOpacity(0.25),
+              letterSpacing: 1.5,
+            ),
           ),
-          children: [
-            if (isOptional)
-              TextSpan(
-                text: ' (Optional)',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textSecondary.withValues(alpha: 0.6),
-                ),
+          if (isOptional) ...[
+            SizedBox(width: 6.w),
+            Text(
+              '(OPTIONAL)',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.white.withOpacity(0.15),
+                letterSpacing: 1,
               ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

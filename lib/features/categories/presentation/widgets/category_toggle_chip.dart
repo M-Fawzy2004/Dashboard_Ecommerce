@@ -22,12 +22,12 @@ class CategoryToggleChip extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: value ? AppColors.primary.withValues(alpha: 0.1) : const Color(0xFFF8F9FA),
+          color: value ? AppColors.primary.withOpacity(0.15) : Colors.white.withOpacity(0.02),
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
             color: value
-                ? AppColors.primary.withValues(alpha: 0.4)
-                : Colors.black.withValues(alpha: 0.08),
+                ? AppColors.primary.withOpacity(0.4)
+                : Colors.white.withOpacity(0.06),
           ),
         ),
         child: Row(
@@ -36,7 +36,7 @@ class CategoryToggleChip extends StatelessWidget {
             Icon(
               value ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
               size: 14.sp,
-              color: value ? AppColors.primary : AppColors.textSecondary.withValues(alpha: 0.5),
+              color: value ? AppColors.primary : Colors.white.withOpacity(0.3),
             ),
             SizedBox(width: 6.w),
             Text(
@@ -44,7 +44,7 @@ class CategoryToggleChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: value ? FontWeight.w700 : FontWeight.w500,
-                color: value ? AppColors.primary : AppColors.textSecondary,
+                color: value ? AppColors.primary : Colors.white.withOpacity(0.5),
               ),
             ),
           ],

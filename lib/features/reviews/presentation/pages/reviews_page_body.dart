@@ -7,6 +7,7 @@ import '../../../../../shared/theme/app_spacing.dart';
 import '../cubit/reviews_cubit.dart';
 import '../../domain/entities/review_entity.dart';
 
+import '../../../../../shared/utils/app_snack_bar.dart';
 import '../../../products/domain/entities/product_entity.dart';
 import '../../../products/presentation/cubit/products_cubit.dart';
 
@@ -24,7 +25,7 @@ class ReviewsPageBody extends StatelessWidget {
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w900,
-            color: AppColors.textPrimary,
+            color: Colors.white,
           ),
         ),
         AppSpacing.v20,
@@ -34,7 +35,7 @@ class ReviewsPageBody extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (state is ReviewsError) {
-              return Center(child: Text('Error: ${state.message}'));
+              return Center(child: Text('Error: ${state.message}', style: const TextStyle(color: Colors.white)));
             }
             if (state is ReviewsLoaded) {
               return Column(
@@ -62,15 +63,9 @@ class ReviewsPageBody extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -88,12 +83,12 @@ class ReviewsPageBody extends StatelessWidget {
       children: [
         Container(
           padding: EdgeInsets.all(10.r),
-          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+          decoration: BoxDecoration(color: color.withOpacity(0.1), shape: BoxShape.circle),
           child: Icon(icon, color: color, size: 20),
         ),
         AppSpacing.v10,
-        Text(value, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
-        Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500, fontWeight: FontWeight.w500)),
+        Text(value, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w900, color: Colors.white)),
+        Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.3), fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -122,16 +117,16 @@ class _ReviewCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-            child: Text(review.userName[0].toUpperCase(), style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+            backgroundColor: AppColors.primary.withOpacity(0.1),
+            child: Text(review.userName[0].toUpperCase(), style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -140,9 +135,9 @@ class _ReviewCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(review.userName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                    Text(review.userName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: Colors.white)),
                     const Spacer(),
-                    Text(DateFormat('MMM dd, yyyy').format(review.createdAt), style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade400)),
+                    Text(DateFormat('MMM dd, yyyy').format(review.createdAt), style: TextStyle(fontSize: 12.sp, color: Colors.white.withOpacity(0.2))),
                   ],
                 ),
                 AppSpacing.v5,
@@ -161,9 +156,7 @@ class _ReviewCard extends StatelessWidget {
                       final product = productsState.items.firstWhere((p) => p.id == review.productId);
                       onProductTap?.call(product);
                     } catch (_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Product details not found or loaded')),
-                      );
+                      AppSnackBar.showError(context, 'Product details not found or loaded');
                     }
                   },
                   child: Text(

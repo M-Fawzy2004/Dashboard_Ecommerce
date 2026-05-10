@@ -28,12 +28,13 @@ class ProductDetailsInfoSection extends StatelessWidget {
             fontSize: 22.sp,
             fontWeight: FontWeight.w900,
             height: 1.2,
+            color: Colors.white,
           ),
         ),
         AppSpacing.v10,
         Text(
           'SKU: ${product.brand}',
-          style: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary),
+          style: TextStyle(fontSize: 13.sp, color: Colors.white.withOpacity(0.4)),
         ),
         AppSpacing.v20,
         Row(
@@ -71,7 +72,7 @@ class ProductDetailsInfoSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10.sp,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textSecondary.withValues(alpha: 0.5),
+                      color: Colors.white.withOpacity(0.2),
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -81,7 +82,7 @@ class ProductDetailsInfoSection extends StatelessWidget {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                       decoration: TextDecoration.lineThrough,
-                      color: AppColors.textSecondary.withValues(alpha: 0.4),
+                      color: Colors.white.withOpacity(0.15),
                     ),
                   ),
                 ],
@@ -110,14 +111,14 @@ class ProductDetailsDescription extends StatelessWidget {
       children: [
         Text(
           'Description',
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.white),
         ),
         AppSpacing.v10,
         Text(
           description ?? 'No description available.',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textSecondary,
+            color: Colors.white.withOpacity(0.4),
             height: 1.6,
           ),
         ),
@@ -137,7 +138,7 @@ class ProductDetailsSpecs extends StatelessWidget {
       children: [
         Text(
           'Specifications',
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.white),
         ),
         AppSpacing.v12,
         Wrap(
@@ -151,14 +152,16 @@ class ProductDetailsSpecs extends StatelessWidget {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F3F5),
+                    color: Colors.white.withOpacity(0.02),
                     borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(color: Colors.white.withOpacity(0.05)),
                   ),
                   child: Text(
                     '${e.key}: ${e.value}',
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
+                      color: Colors.white.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -181,14 +184,15 @@ class ProductDetailsSummary extends StatelessWidget {
       children: [
         Text(
           'Quick Summary',
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.white),
         ),
         AppSpacing.v15,
         Container(
           padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F3F5),
+            color: Colors.white.withOpacity(0.02),
             borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
           child: Column(
             children: [
@@ -197,13 +201,13 @@ class ProductDetailsSummary extends StatelessWidget {
                 label: 'Current Stock',
                 value: '${product.stock} Units',
               ),
-              const Divider(height: 24),
+              Divider(height: 24, color: Colors.white.withOpacity(0.05)),
               ProductSummaryRow(
                 icon: Icons.tag_rounded,
                 label: 'SKU Code',
                 value: product.brand,
               ),
-              const Divider(height: 24),
+              Divider(height: 24, color: Colors.white.withOpacity(0.05)),
               ProductSummaryRow(
                 icon: Icons.category_rounded,
                 label: 'Category',

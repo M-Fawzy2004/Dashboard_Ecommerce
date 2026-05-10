@@ -54,13 +54,13 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   Future<void> _addThumbImage() async {
     final source = await showModalBottomSheet<PickSource>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 20.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,19 +68,19 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
               Text(
                 'Choose image source',
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 16.h),
               SourceTile(
                 icon: Icons.link,
                 title: 'From internet link',
                 subtitle: 'Paste image URL then preview before adding',
                 onTap: () => Navigator.pop(ctx, PickSource.network),
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 12.h),
               SourceTile(
                 icon: Icons.photo_library_outlined,
                 title: 'From device (Multi-select)',
@@ -123,13 +123,13 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   Future<ProductImageItem?> _selectImageSource() async {
     final PickSource? source = await showModalBottomSheet<PickSource>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 20.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,19 +137,19 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
               Text(
                 'Choose image source',
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 16.h),
               SourceTile(
                 icon: Icons.link,
                 title: 'From internet link',
                 subtitle: 'Paste image URL then preview before adding',
                 onTap: () => Navigator.pop(ctx, PickSource.network),
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 12.h),
               SourceTile(
                 icon: Icons.photo_library_outlined,
                 title: 'From device',
@@ -177,29 +177,38 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
     final TextEditingController urlCtrl = TextEditingController();
     final String? url = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Add image from internet'),
-        content: TextField(
-          controller: urlCtrl,
-          autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'Image URL',
-            hintText: 'https://example.com/image.jpg',
-          ),
+      builder: (ctx) => Theme(
+        data: Theme.of(ctx).copyWith(
+          dialogBackgroundColor: AppColors.card,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+        child: AlertDialog(
+          backgroundColor: AppColors.card,
+          title: Text('Add image from internet', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+          content: TextField(
+            controller: urlCtrl,
+            autofocus: true,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              labelText: 'Image URL',
+              labelStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+              hintText: 'https://example.com/image.jpg',
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.2)),
+            ),
           ),
-          FilledButton(
-            onPressed: () {
-              final String value = urlCtrl.text.trim();
-              if (value.isNotEmpty) Navigator.pop(ctx, value);
-            },
-            child: const Text('Preview'),
-          ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text('Cancel', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+            ),
+            TextButton(
+              onPressed: () {
+                final String value = urlCtrl.text.trim();
+                if (value.isNotEmpty) Navigator.pop(ctx, value);
+              },
+              child: const Text('Preview', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
     );
     urlCtrl.dispose();
@@ -213,70 +222,74 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   Future<bool> _confirmNetworkImage(String url) async {
     final bool? decision = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Confirm image'),
-        contentPadding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h),
-        content: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 320.w, maxHeight: 320.h),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Container(
-                    height: 170.h,
-                    width: double.infinity,
-                    color: const Color(0xFFF5F5F5),
-                    child: Image.network(
-                      url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => Center(
-                        child: Text(
-                          'Invalid image link',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: AppColors.textSecondary,
+      builder: (ctx) => Theme(
+        data: Theme.of(ctx).copyWith(dialogBackgroundColor: AppColors.card),
+        child: AlertDialog(
+          backgroundColor: AppColors.card,
+          title: Text('Confirm image', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+          contentPadding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 320.w, maxHeight: 320.h),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: Container(
+                      height: 170.h,
+                      width: double.infinity,
+                      color: Colors.white.withOpacity(0.05),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => Center(
+                          child: Text(
+                            'Invalid image link',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.white.withOpacity(0.3),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  'Preview from URL',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                  SizedBox(height: 10.h),
+                  Text(
+                    'Preview from URL',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  url,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: AppColors.textSecondary,
+                  SizedBox(height: 4.h),
+                  Text(
+                    url,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: Colors.white.withOpacity(0.3),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text('Reject', style: TextStyle(color: Colors.white.withOpacity(0.5))),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Confirm', style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Reject'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Confirm'),
-          ),
-        ],
       ),
     );
     return decision ?? false;
@@ -284,7 +297,7 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
 
   void _notify() {
     final images = <ProductImageItem>[
-      ?_mainImage,
+      if (_mainImage != null) _mainImage!,
       ..._thumbImages,
     ];
     widget.onChanged?.call(images);
@@ -294,34 +307,50 @@ class _ProductImagesCardState extends State<ProductImagesCard> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.r),
+      padding: EdgeInsets.all(24.r),
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Container(
+                width: 36.w,
+                height: 36.h,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(Icons.image_outlined, size: 18.sp, color: Colors.white.withOpacity(0.4)),
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                'Product Images',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          Divider(color: Colors.white.withOpacity(0.06), height: 1),
+          SizedBox(height: 20.h),
           Text(
-            'Upload product image',
+            'Upload high-quality images of your product to attract more customers.',
             style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              fontSize: 13.sp,
+              color: Colors.white.withOpacity(0.3),
+              fontWeight: FontWeight.w400,
             ),
           ),
-          SizedBox(height: 16.h),
-          Text(
-            'PRODUCT IMAGE',
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-              letterSpacing: 0.6,
-            ),
-          ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 24.h),
           MainImageUploadCard(
             mainImage: _mainImage,
             thumbImages: _thumbImages,

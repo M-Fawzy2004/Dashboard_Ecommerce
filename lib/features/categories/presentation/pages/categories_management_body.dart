@@ -34,30 +34,34 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        backgroundColor: AppColors.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+          side: BorderSide(color: Colors.white.withOpacity(0.05)),
+        ),
         title: Row(
           children: [
             Container(
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: AppColors.error.withValues(alpha: 0.1),
+                color: AppColors.error.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20.sp),
             ),
             SizedBox(width: 12.w),
-            Text('Delete Category', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800)),
+            Text('Delete Category', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w800, color: Colors.white)),
           ],
         ),
         content: Text(
           'Are you sure you want to delete "${cat.label}"? This cannot be undone.',
-          style: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary),
+          style: TextStyle(fontSize: 13.sp, color: Colors.white.withOpacity(0.6)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text('Cancel',
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: Colors.white.withOpacity(0.5))),
           ),
           FilledButton(
             onPressed: () {
@@ -109,10 +113,10 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Categories',
-                  style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
+                  style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w900, color: Colors.white)),
               SizedBox(height: 4.h),
               Text('Manage product categories used across the store',
-                  style: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary)),
+                  style: TextStyle(fontSize: 13.sp, color: Colors.white.withOpacity(0.4))),
             ],
           ),
         ),
@@ -153,7 +157,7 @@ class _CategoriesManagementBodyState extends State<CategoriesManagementBody> {
           icon: Icons.lock_outlined,
           label: 'System Default',
           value: '${categories.where((c) => !c.id.startsWith('custom_')).length}',
-          color: AppColors.textSecondary,
+          color: Colors.white.withOpacity(0.5),
         ),
       ],
     );

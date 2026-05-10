@@ -21,14 +21,14 @@ class CategoryStatChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        border: Border.all(color: Colors.white.withOpacity(0.04)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -39,8 +39,9 @@ class CategoryStatChip extends StatelessWidget {
             width: 36.w,
             height: 36.h,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: color.withOpacity(0.2)),
             ),
             child: Icon(icon, size: 18.sp, color: color),
           ),
@@ -53,13 +54,14 @@ class CategoryStatChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
               ),
               Text(
                 label,
-                style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 11.sp, color: Colors.white.withOpacity(0.4)),
               ),
+
             ],
           ),
         ],

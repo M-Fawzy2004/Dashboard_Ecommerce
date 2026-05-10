@@ -143,28 +143,31 @@ class _ProductsGridState extends State<ProductsGrid> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Filter by Category',
+          'CATEGORIES',
           style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+            fontSize: 10.sp,
+            fontWeight: FontWeight.w800,
+            color: Colors.white.withOpacity(0.3),
+            letterSpacing: 2,
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 14.h),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(vertical: 4.h),
           physics: const BouncingScrollPhysics(),
           child: Row(
             children: [
               _buildCategoryChip(
                 'All Products',
-                Icons.grid_view_rounded,
+                Icons.apps_rounded,
                 _activeCategory == null,
                 () => setState(() => _activeCategory = null),
+                activeColor: AppColors.primary,
               ),
               ...CategoryConfig.all.map(
                 (cfg) => Padding(
-                  padding: EdgeInsets.only(left: 10.w),
+                  padding: EdgeInsets.only(left: 12.w),
                   child: _buildCategoryChip(
                     cfg.label,
                     cfg.icon,
@@ -184,39 +187,75 @@ class _ProductsGridState extends State<ProductsGrid> {
     String label,
     IconData icon,
     bool isSelected,
-    VoidCallback onTap,
-  ) {
+    VoidCallback onTap, {
+    Color? activeColor,
+  }) {
+    final themeColor = activeColor ?? AppColors.primary;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        duration: const Duration(milliseconds: 300),
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.card,
-          borderRadius: BorderRadius.circular(12.r),
+          color: isSelected ? themeColor.withOpacity(0.15) : AppColors.card,
+          borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
-                : Colors.black.withValues(alpha: 0.06),
-            width: 1.2,
+                ? themeColor.withOpacity(0.5)
+                : Colors.white.withOpacity(0.04),
+            width: 1,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: themeColor.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
               size: 16.sp,
-              color: isSelected ? Colors.white : AppColors.primary,
+              color: isSelected ? themeColor : Colors.white.withOpacity(0.3),
             ),
             SizedBox(width: 8.w),
             Text(
               label,
               style: TextStyle(
                 fontSize: 12.sp,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                color: isSelected ? Colors.white : AppColors.textPrimary,
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                color: isSelected ? themeColor : Colors.white.withOpacity(0.6),
+                letterSpacing: 0.3,
               ),
             ),
+            if (isSelected) ...[
+              SizedBox(width: 8.w),
+              Container(
+                width: 6.w,
+                height: 6.h,
+                decoration: BoxDecoration(
+                  color: themeColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: themeColor.withOpacity(0.5),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -225,34 +264,40 @@ class _ProductsGridState extends State<ProductsGrid> {
 
   Widget _buildToolbar(int count) {
     return Wrap(
-      spacing: 12.w,
-      runSpacing: 12.h,
+      spacing: 16.w,
+      runSpacing: 16.h,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Container(
-          width: 300.w,
-          height: 70.h,
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
+          width: 320.w,
+          height: 52.h,
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
           child: Row(
             children: [
               Icon(
                 Icons.search_rounded,
                 size: 18.sp,
-                color: AppColors.textSecondary.withValues(alpha: 0.5),
+                color: Colors.white.withOpacity(0.2),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 12.w),
               Expanded(
                 child: TextField(
                   onChanged: (v) => setState(() => _searchQuery = v),
-                  style: TextStyle(fontSize: 13.sp),
-                  decoration: const InputDecoration(
-                    hintText: 'Search products...',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Search products by name or category...',
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.15)),
                     border: InputBorder.none,
+                    isCollapsed: true,
                   ),
                 ),
               ),
@@ -271,6 +316,7 @@ class _ProductsGridState extends State<ProductsGrid> {
           icon: Icons.sort_rounded,
           onChanged: (v) => setState(() => _sortBy = v),
         ),
+        const Spacer(),
         _buildCountBadge(count),
       ],
     );
@@ -278,17 +324,19 @@ class _ProductsGridState extends State<ProductsGrid> {
 
   Widget _buildCountBadge(int count) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10.r),
+        color: AppColors.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Text(
-        '$count products',
+        '$count ITEMS',
         style: TextStyle(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
+          fontSize: 11.sp,
+          fontWeight: FontWeight.w800,
           color: AppColors.primary,
+          letterSpacing: 1,
         ),
       ),
     );
@@ -297,18 +345,37 @@ class _ProductsGridState extends State<ProductsGrid> {
   Widget _buildEmpty() {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 60.h),
+        padding: EdgeInsets.symmetric(vertical: 80.h),
         child: Column(
           children: [
-            Icon(
-              Icons.inventory_2_outlined,
-              size: 48.sp,
-              color: AppColors.textSecondary.withValues(alpha: 0.3),
+            Container(
+              padding: EdgeInsets.all(24.r),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.02),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.inventory_2_outlined,
+                size: 48.sp,
+                color: Colors.white.withOpacity(0.1),
+              ),
             ),
-            SizedBox(height: 12.h),
-            const Text(
+            SizedBox(height: 20.h),
+            Text(
               'No products found',
-              style: TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.4),
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              'Try adjusting your filters or search query',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.2),
+                fontSize: 12.sp,
+              ),
             ),
           ],
         ),
