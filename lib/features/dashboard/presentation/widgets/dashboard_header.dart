@@ -15,30 +15,14 @@ class DashboardHeader extends StatelessWidget {
         children: [
           Text(
             'Dashboard',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 24.sp,
-                ),
-          ),
-          Row(
-            children: [
-              Text(
-                'Last update: ',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
-              ),
-              Text(
-                'Oct 20, 2026',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              color: AppColors.accent,
+              fontSize: 24.sp,
+            ),
           ),
         ],
       ),
     );
   }
 }
-
