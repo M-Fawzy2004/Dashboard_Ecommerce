@@ -83,7 +83,7 @@ Here is a glimpse of the meticulously designed interface:
 ## 👨‍💻 Developer & Maintainer
 
 <div align="center">
-  <h3><strong>Developed with ❤️ by <a href="https://github.com/M-Fawzy2004">Mahmoud Fawzy</a></strong></h3>
+  <h3><strong>Developed with ❤️ by <a href="https://github.com/M-Fawzy2004">Mohamed Fawzy</a></strong></h3>
   <p>Software Engineer & Mobile Application Developer</p>
 </div>
 
